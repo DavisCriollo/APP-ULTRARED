@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ultrared/config/router/app_router.notifier.dart';
+import 'package:ultrared/features/actividades/presentation/screens/actividad.dart'; 
+import 'package:ultrared/features/actividades/presentation/screens/actividades.dart';
 import 'package:ultrared/features/auth/auth.dart';
 import 'package:ultrared/features/auth/presentation/providers/auth_provider.dart';
 import 'package:ultrared/features/shared/screen/show_pdf_screen.dart';
@@ -33,6 +35,15 @@ final goRouterProvider = Provider((ref) {
       GoRoute(
         path: '/',
         builder: (context, state) => const HomeScreen(),
+      ),
+      //* ACTIVIDADES
+      GoRoute(
+        path: '/actividades',
+        builder: (context, state) => const ActividadesScreen(),
+      ),
+      GoRoute(
+        path: '/actividad/:id',
+        builder: (context, state) => const ActividadScreen(),
       ),
 
       GoRoute(

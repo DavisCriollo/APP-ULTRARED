@@ -30,7 +30,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
   final Dio dio;
 
   AuthNotifier({required this.authRepository, required this.keyValueStorage})
-      : dio = Dio(BaseOptions(baseUrl: Environment.apiUrl)),
+      : dio = Dio(BaseOptions(
+          baseUrl: '${Environment.apiUrl}api',
+        )),
         super(AuthState()) {
     checkAuthStatus();
   }

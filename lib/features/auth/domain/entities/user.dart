@@ -21,6 +21,8 @@ class User {
   final String colorSecundario;
   final List<String> empRoles;
   final dynamic permisosUsuario;
+  final String sector;
+  final String ciudad;
 
   User({
     required this.token,
@@ -41,5 +43,7 @@ class User {
     required this.colorSecundario,
     required this.empRoles,
     required this.permisosUsuario,
+    required this.sector,
+    required this.ciudad,
   });
 }

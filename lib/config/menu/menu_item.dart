@@ -17,10 +17,10 @@ class MenuItem {
 
 const appMenuItems = <MenuItem>[
   MenuItem(
-    title: 'Modulo',
-    subTitle: "Nuestros Clientes",
-    link: "/clientes",
-    icon: 'assets/images/personas.png',
+    title: 'Actividades',
+    subTitle: "Actividades",
+    link: "/actividades",
+    icon: 'assets/images/open-book.png',
     color: Colors.blue,
   ),
 ];

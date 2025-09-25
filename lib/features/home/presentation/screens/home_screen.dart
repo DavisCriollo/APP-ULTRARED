@@ -88,12 +88,12 @@ class _HomeView extends ConsumerWidget {
                               !authState.isDemo) {
                             return const SizedBox.shrink();
                           }
-                          if (authState.isDemo && menuItem.link == '/admin') {
-                            return ItemMenu(
-                                size: size,
-                                menuItem: menuItem,
-                                turnoActivo: true);
-                          }
+                          // if (authState.isDemo && menuItem.link == '/admin') {
+                          //   return ItemMenu(
+                          //       size: size,
+                          //       menuItem: menuItem,
+                          //       turnoActivo: true);
+                          // }
                           return ItemMenu(
                             size: size,
                             menuItem: menuItem,

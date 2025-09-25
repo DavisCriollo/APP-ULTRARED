@@ -24,7 +24,8 @@ class UserMapper {
   final String colorSecundario;
   final List empRoles;
   final dynamic permisosUsuario;
-
+  final String sector;
+  final String ciudad;
   UserMapper({
     required this.token,
     required this.id,
@@ -44,6 +45,8 @@ class UserMapper {
     required this.colorSecundario,
     required this.empRoles,
     required this.permisosUsuario,
+    required this.sector,
+    required this.ciudad,
   });
 
   static User userJsonToEntity(Map<String, dynamic> json) => User(
@@ -65,5 +68,7 @@ class UserMapper {
         colorSecundario: json["colorSecundario"],
         empRoles: List<String>.from(json["empRoles"].map((x) => x)),
         permisosUsuario: json["permisosUsuario"],
+        sector: json["sector"] ?? '',
+        ciudad: json["ciudad"] ?? '',
       );
 }

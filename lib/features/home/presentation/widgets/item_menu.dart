@@ -6,12 +6,10 @@ import 'package:ultrared/main.dart';
 
 class ItemMenu extends StatelessWidget {
   final MenuItem menuItem;
-  final bool turnoActivo;
   const ItemMenu({
     super.key,
     required this.size,
     required this.menuItem,
-    this.turnoActivo = false,
   });
 
   final Responsive size;
@@ -35,23 +33,22 @@ class ItemMenu extends StatelessWidget {
                   10.0), // Radio de los bordes redondeados
             ),
             child: InkWell(
-              onTap: turnoActivo
-                  ? () {
-                      // Acción al presionar el botón
-                      context.push(menuItem.link);
-                    }
-                  : null,
+              onTap: () {
+                // Acción al presionar el botón
+                context.push(menuItem.link);
+              },
               splashColor: colors.secondary
                   .withAlpha((0.7 * 255).toInt()), // Color del splash
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.0),
                   border: Border.all(
-                      color: turnoActivo
-                          ? colors.secondary.lighten(0.2)
-                          : colors.secondary
-                              .lighten(0.2)
-                              .withAlpha((0.6 * 255).toInt()),
+                      color: colors.secondary.lighten(0.2),
+                      // color: turnoActivo
+                      //     ? colors.secondary.lighten(0.2)
+                      //     : colors.secondary
+                      //         .lighten(0.2)
+                      //         .withAlpha((0.6 * 255).toInt()),
                       width: 2.0), // Borde gris
                 ),
                 child: Center(
@@ -63,11 +60,12 @@ class ItemMenu extends StatelessWidget {
                       Image.asset(
                         menuItem.icon,
                         height: size.iScreen(7.0),
-                        color: turnoActivo
-                            ? colors.secondary.lighten(0.2)
-                            : colors.secondary.lighten(0.2).withAlpha(
-                                (0.6 * 255)
-                                    .toInt()), // Reducir el tamaño de la imagen
+                        color: colors.secondary.lighten(0.2),
+                        // color: turnoActivo
+                        //     ? colors.secondary.lighten(0.2)
+                        //     : colors.secondary.lighten(0.2).withAlpha(
+                        //         (0.6 * 255)
+                        //             .toInt()), // Reducir el tamaño de la imagen
                       ),
                       const SizedBox(height: 4), // Reducir el espacio
                       Text(
@@ -76,11 +74,12 @@ class ItemMenu extends StatelessWidget {
                           fontSize:
                               size.iScreen(1.8), // Reducir el tamaño del texto
                           fontWeight: FontWeight.bold,
-                          color: turnoActivo
-                              ? colors.secondary.lighten(0.2)
-                              : colors.secondary
-                                  .lighten(0.2)
-                                  .withAlpha((0.6 * 255).toInt()),
+                          color: colors.secondary.lighten(0.2),
+                          // color: turnoActivo
+                          //     ? colors.secondary.lighten(0.2)
+                          //     : colors.secondary
+                          //         .lighten(0.2)
+                          //         .withAlpha((0.6 * 255).toInt()),
                         ),
                         textAlign: TextAlign.center,
                       ),
