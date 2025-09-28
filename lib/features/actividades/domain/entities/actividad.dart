@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:ultrared/features/actividades/domain/entities/ubicacion.dart';
 import 'package:ultrared/features/shared/helpers/get_date.dart';
 import 'package:ultrared/features/shared/helpers/parse.dart';
 
@@ -20,7 +21,7 @@ class Actividad {
   String actaClave;
   String actaClienteRegulador;
   List<dynamic> actaFotos;
-  ActaUbicacion actaUbicacion;
+  Ubicacion actaUbicacion;
   List<dynamic> actaEquiposInstalados;
   List<dynamic> actaCargosAdicionales;
   String actaConfigRouter;
@@ -155,7 +156,7 @@ class Actividad {
       planMegasInternet: "",
       correoNuevoRegistro: '',
       actaIdPlanInternet: 0,
-      actaUbicacion: ActaUbicacion(
+      actaUbicacion: Ubicacion(
         longitud: "",
         latitud: "",
       ),
@@ -179,7 +180,7 @@ class Actividad {
         actaClave: json["actaClave"],
         actaClienteRegulador: json["actaClienteRegulador"],
         actaFotos: List<dynamic>.from(json["actaFotos"].map((x) => x)),
-        actaUbicacion: ActaUbicacion.fromJson(json["actaUbicacion"]),
+        actaUbicacion: Ubicacion.fromJson(json["actaUbicacion"]),
         actaEquiposInstalados:
             List<dynamic>.from(json["actaEquiposInstalados"].map((x) => x)),
         actaCargosAdicionales:
@@ -218,6 +219,112 @@ class Actividad {
             Parse.parseDynamicToString(json["planMegasInternet"]),
         correoNuevoRegistro: json["correo_nuevo_registro"] ?? '',
       );
+
+  // Nuevo método copyWith
+  Actividad copyWith({
+    int? actaId,
+    int? actaIdCliente,
+    int? actaIdPersonaEntrega,
+    int? actaIdVendedor,
+    String? actaFecha,
+    String? actaFechaInstalacion,
+    String? actaOpcion,
+    String? actaEstado,
+    String? actaDetalleEstado,
+    String? actaTipo,
+    String? actaSeEncuentraCliente,
+    String? actaServiciosVisita,
+    String? actaRedWifi,
+    String? actaClave,
+    String? actaClienteRegulador,
+    List<dynamic>? actaFotos,
+    Ubicacion? actaUbicacion,
+    List<dynamic>? actaEquiposInstalados,
+    List<dynamic>? actaCargosAdicionales,
+    String? actaConfigRouter,
+    String? actaValorRouter,
+    String? actaCambioPatch,
+    String? actaValorPatch,
+    String? actaCalidadIns,
+    String? actaSolucionReq,
+    String? actaRecNombre,
+    String? actaRecFirma,
+    String? actaEntFirma,
+    String? actaUser,
+    String? actaEmpresa,
+    int? actaIdPlanInternet,
+    String? actaCiudad,
+    List<String>? actaSector,
+    String? actaFecReg,
+    String? actaFecUpd,
+    String? actaDocCliente,
+    String? actaNombreCliente,
+    String? actaDireccionCliente,
+    List<String>? actaTelCliente,
+    List<String>? actaEmailCliente,
+    String? actaEntDoc,
+    String? actaEntNombre,
+    String? actaDocVendedor,
+    String? actaNombreVendedor,
+    String? planNombreInternet,
+    String? planValorInternet,
+    String? planMegasInternet,
+    String? correoNuevoRegistro,
+  }) {
+    return Actividad(
+      actaId: actaId ?? this.actaId,
+      actaIdCliente: actaIdCliente ?? this.actaIdCliente,
+      actaIdPersonaEntrega: actaIdPersonaEntrega ?? this.actaIdPersonaEntrega,
+      actaIdVendedor: actaIdVendedor ?? this.actaIdVendedor,
+      actaFecha: actaFecha ?? this.actaFecha,
+      actaFechaInstalacion: actaFechaInstalacion ?? this.actaFechaInstalacion,
+      actaOpcion: actaOpcion ?? this.actaOpcion,
+      actaEstado: actaEstado ?? this.actaEstado,
+      actaDetalleEstado: actaDetalleEstado ?? this.actaDetalleEstado,
+      actaTipo: actaTipo ?? this.actaTipo,
+      actaSeEncuentraCliente:
+          actaSeEncuentraCliente ?? this.actaSeEncuentraCliente,
+      actaServiciosVisita: actaServiciosVisita ?? this.actaServiciosVisita,
+      actaRedWifi: actaRedWifi ?? this.actaRedWifi,
+      actaClave: actaClave ?? this.actaClave,
+      actaClienteRegulador: actaClienteRegulador ?? this.actaClienteRegulador,
+      actaFotos: actaFotos ?? this.actaFotos,
+      actaUbicacion: actaUbicacion ?? this.actaUbicacion,
+      actaEquiposInstalados:
+          actaEquiposInstalados ?? this.actaEquiposInstalados,
+      actaCargosAdicionales:
+          actaCargosAdicionales ?? this.actaCargosAdicionales,
+      actaConfigRouter: actaConfigRouter ?? this.actaConfigRouter,
+      actaValorRouter: actaValorRouter ?? this.actaValorRouter,
+      actaCambioPatch: actaCambioPatch ?? this.actaCambioPatch,
+      actaValorPatch: actaValorPatch ?? this.actaValorPatch,
+      actaCalidadIns: actaCalidadIns ?? this.actaCalidadIns,
+      actaSolucionReq: actaSolucionReq ?? this.actaSolucionReq,
+      actaRecNombre: actaRecNombre ?? this.actaRecNombre,
+      actaRecFirma: actaRecFirma ?? this.actaRecFirma,
+      actaEntFirma: actaEntFirma ?? this.actaEntFirma,
+      actaUser: actaUser ?? this.actaUser,
+      actaEmpresa: actaEmpresa ?? this.actaEmpresa,
+      actaIdPlanInternet: actaIdPlanInternet ?? this.actaIdPlanInternet,
+      actaCiudad: actaCiudad ?? this.actaCiudad,
+      actaSector: actaSector ?? this.actaSector,
+      actaFecReg: actaFecReg ?? this.actaFecReg,
+      actaFecUpd: actaFecUpd ?? this.actaFecUpd,
+      actaDocCliente: actaDocCliente ?? this.actaDocCliente,
+      actaNombreCliente: actaNombreCliente ?? this.actaNombreCliente,
+      actaDireccionCliente: actaDireccionCliente ?? this.actaDireccionCliente,
+      actaTelCliente: actaTelCliente ?? this.actaTelCliente,
+      actaEmailCliente: actaEmailCliente ?? this.actaEmailCliente,
+      actaEntDoc: actaEntDoc ?? this.actaEntDoc,
+      actaEntNombre: actaEntNombre ?? this.actaEntNombre,
+      actaDocVendedor: actaDocVendedor ?? this.actaDocVendedor,
+      actaNombreVendedor: actaNombreVendedor ?? this.actaNombreVendedor,
+      planNombreInternet: planNombreInternet ?? this.planNombreInternet,
+      planValorInternet: planValorInternet ?? this.planValorInternet,
+      planMegasInternet: planMegasInternet ?? this.planMegasInternet,
+      correoNuevoRegistro: correoNuevoRegistro ?? this.correoNuevoRegistro,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "actaId": actaId,
@@ -273,29 +380,9 @@ class Actividad {
       };
 }
 
-class ActaUbicacion {
-  String longitud;
-  String latitud;
-
-  ActaUbicacion({
-    required this.longitud,
-    required this.latitud,
-  });
-
-  factory ActaUbicacion.fromJson(Map<String, dynamic> json) => ActaUbicacion(
-        longitud: Parse.parseDynamicToString(json["longitud"]),
-        latitud: Parse.parseDynamicToString(json["latitud"]),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "longitud": longitud,
-        "latitud": latitud,
-      };
-}
 
 class BusquedaActividades {
   final String actaDocCliente;
-
   const BusquedaActividades({
     this.actaDocCliente = '',
   });

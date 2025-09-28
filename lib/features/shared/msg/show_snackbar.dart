@@ -26,6 +26,34 @@ class NotificationsService {
     ));
   }
 
+  /// Muestra un error si `nextError` es distinto y no vacío, y luego ejecuta
+  /// `clearErrorCallback` para limpiar el error en el provider.
+  /// Uso típico desde `ref.listen`:
+  /// ref.listen(sharedDataProvider, (previous, next) {
+  ///   NotificationsService.showProviderErrorAndClear(
+  ///     context: context,
+  ///     prevError: previous?.responseGetCiudades.error ?? '',
+  ///     nextError: next.responseGetCiudades.error,
+  ///     clearErrorCallback: () => ref.read(sharedDataProvider.notifier).clearErrorCiudades(),
+  ///   );
+  /// });
+  static void showProviderErrorAndClear({
+    required BuildContext context,
+    required String prevError,
+    required String nextError,
+    required VoidCallback clearErrorCallback,
+    SnackbarCategory category = SnackbarCategory.error,
+  }) {
+    if (nextError.isNotEmpty && prevError != nextError) {
+      show(context, nextError, category);
+      try {
+        clearErrorCallback();
+      } catch (_) {
+        // Silenciar errores del callback para no romper la UI.
+      }
+    }
+  }
+
   static Color _getSnackbarColor(SnackbarCategory category) {
     switch (category) {
       case SnackbarCategory.success:

@@ -36,7 +36,6 @@ class GenericDelegate<T> extends SearchDelegate<SearchGenericResult<T>> {
           searchFieldLabel: 'Buscar',
           searchFieldStyle: const TextStyle(
             fontSize: 17.0,
-            color: Colors.black,
           ),
         );
 
@@ -54,12 +53,14 @@ class GenericDelegate<T> extends SearchDelegate<SearchGenericResult<T>> {
     _debounceTimer = Timer(
       const Duration(milliseconds: 250),
       () async {
-        // if (search.isEmpty) {
-        //   if (!debounceItems.isClosed) {
-        //     // debounceItems.add([]);
-        //   }
-        //   return;
-        // }
+        if (search.isEmpty) {
+          if (!debounceItems.isClosed) {
+            // debounceItems.add([]);
+          }
+          if (!loadingStream.isClosed) {
+            loadingStream.add(false);
+          } 
+        }
         final items = await searchItems(search: search);
         initialItems = items;
 
@@ -74,18 +75,46 @@ class GenericDelegate<T> extends SearchDelegate<SearchGenericResult<T>> {
   }
 
   StreamBuilder<List<T>> buildResultsAndSuggestions() {
-    return StreamBuilder(
+    return StreamBuilder<List<T>>(
       initialData: initialItems,
       stream: debounceItems.stream,
-      builder: (context, snapshot) {
-        final items = snapshot.data ?? [];
-        return ListView.builder(
-          itemCount: items.length,
-          itemBuilder: (context, index) =>
-              itemWidgetBuilder(items[index], (context, item) {
-            clearStreams();
-            close(context, SearchGenericResult(item: item));
-          }),
+      builder: (context, snapshotItems) {
+        final items = snapshotItems.data ?? [];
+
+        return StreamBuilder<bool>(
+          initialData: false,
+          stream: loadingStream.stream,
+          builder: (context, snapshotLoading) {
+            final isLoading = snapshotLoading.data ?? false;
+
+            if (items.isEmpty) {
+              if (isLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              // No hay resultados
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    'No hay registros',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              );
+            }
+
+            return ListView.builder(
+              itemCount: items.length,
+              itemBuilder: (context, index) => itemWidgetBuilder(
+                items[index],
+                (context, item) {
+                  clearStreams();
+                  close(context, SearchGenericResult(item: item));
+                },
+              ),
+            );
+          },
         );
       },
     );

@@ -22,8 +22,9 @@ class CustomInputField extends StatelessWidget {
   final bool toUpperCase; // Nuevo parámetro para convertir a mayúsculas
   final bool isLoading; // Nuevo parámetro para mostrar el indicador de progreso
   final bool onlyInt; // Nuevo parámetro para restringir a números enteros
-  final int? maxDigits; // Nuevo parámetro para limitar el número máximo de dígitos
-
+  final int?
+      maxDigits; // Nuevo parámetro para limitar el número máximo de dígitos
+  final VoidCallback? onTap;
   const CustomInputField({
     super.key,
     this.isTopField = false,
@@ -47,6 +48,7 @@ class CustomInputField extends StatelessWidget {
     this.isLoading = false, // Inicializando el nuevo parámetro
     this.onlyInt = false, // Inicializando el nuevo parámetro
     this.maxDigits, // Inicializando el nuevo parámetro
+    this.onTap,
   });
 
   @override
@@ -56,24 +58,32 @@ class CustomInputField extends StatelessWidget {
     return Column(
       children: [
         TextFormField(
+          onTap: onTap,
           autofocus: autofocus,
           readOnly: readOnly,
           controller: controller,
           onChanged: onChanged,
           inputFormatters: [
             if (toUpperCase) _UpperCaseTextFormatter(),
-            if (onlyInt) FilteringTextInputFormatter.digitsOnly, // Restringe a números enteros
-            if (maxDigits != null) LengthLimitingTextInputFormatter(maxDigits), // Limita el número máximo de dígitos
+            if (onlyInt)
+              FilteringTextInputFormatter
+                  .digitsOnly, // Restringe a números enteros
+            if (maxDigits != null)
+              LengthLimitingTextInputFormatter(
+                  maxDigits), // Limita el número máximo de dígitos
           ],
           onFieldSubmitted: onFieldSubmitted,
           validator: validator,
           obscureText: obscureText,
-          keyboardType: onlyInt ? TextInputType.number : keyboardType, // Cambia el teclado si es solo números
+          keyboardType: onlyInt
+              ? TextInputType.number
+              : keyboardType, // Cambia el teclado si es solo números
 
           style: const TextStyle(
             fontSize: 15,
           ),
-          maxLines: lines ?? 1, // Usar el valor de lines si se proporciona, de lo contrario 1
+          maxLines: lines ??
+              1, // Usar el valor de lines si se proporciona, de lo contrario 1
           initialValue: controller == null ? initialValue : null,
           decoration: InputDecoration(
             contentPadding: const EdgeInsets.symmetric(

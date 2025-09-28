@@ -1,8 +1,9 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart'; 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:ultrared/features/actividades/domain/entities/actividad.dart';
 import 'package:ultrared/features/actividades/presentation/provider/actividades_provider.dart';
 import 'package:ultrared/features/auth/presentation/providers/auth_provider.dart';
+import 'package:ultrared/features/shared/domain/entities/ciudad.dart';
 import 'package:ultrared/features/shared/infrastructure/form/form_status.dart';
 import 'package:ultrared/features/shared/provider/socket.dart';
 
@@ -163,6 +164,10 @@ class ActividadFormNotifier extends StateNotifier<ActividadFormState> {
   setLoading(bool loading) {
     state = state.copyWith(isLoading: loading);
   }
+
+  void setSectores(List<CiuSector> sectores) {
+    state = state.copyWith(sectoresData: sectores);
+  }
 }
 
 class ActividadFormState {
@@ -174,14 +179,18 @@ class ActividadFormState {
   final Actividad actividadActive;
   final Actividad actividadForm;
   final Formstatus formStatus;
+  //*params
+  final List<CiuSector> sectoresData;
   ActividadFormState({
-// //* VENTA
+    //* VENTA
     this.isLoading = true,
     this.error = '',
-//* VENTA-FORM
+    //* VENTA-FORM
     required this.actividadActive,
     required this.actividadForm,
     required this.formStatus,
+    //*params
+    this.sectoresData = const [],
   }); // Provide default value here
 
   ActividadFormState copyWith({
@@ -191,6 +200,8 @@ class ActividadFormState {
     Actividad? actividadActive,
     Actividad? actividadForm,
     Formstatus? formStatus,
+    //*params
+    List<CiuSector>? sectoresData,
   }) {
     return ActividadFormState(
       //* VENTA
@@ -201,6 +212,8 @@ class ActividadFormState {
       actividadActive: actividadActive ?? this.actividadActive,
       actividadForm: actividadForm ?? this.actividadForm,
       formStatus: formStatus ?? this.formStatus,
+      //*params
+      sectoresData: sectoresData ?? this.sectoresData,
     );
   }
 }
