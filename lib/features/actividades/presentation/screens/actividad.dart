@@ -1,6 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ultrared/features/actividades/domain/entities/actividad.dart';
 import 'package:ultrared/features/actividades/presentation/provider/actividad_provider.dart';
 import 'package:ultrared/features/clientes/infrastructure/delegatesFunction/delegates.dart';
@@ -10,6 +11,7 @@ import 'package:ultrared/features/shared/provider/shared_data_provider.dart';
 import 'package:ultrared/features/shared/shared.dart';
 import 'package:ultrared/features/shared/widgets/form/custom_expandable_email_list.dart';
 import 'package:ultrared/features/shared/widgets/form/custom_expandable_list_with_delegate.dart';
+import 'package:ultrared/features/shared/widgets/form/editable_map.dart';
 
 class ActividadScreen extends ConsumerWidget {
   const ActividadScreen({
@@ -279,6 +281,13 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
               },
               values: actividadState.actividadForm.actaSector,
               onTap: setNewSectorDelegate,
+            ),
+            EditableMap(
+              initialPosition: LatLng(13.7188, -89.7210),
+              onPositionChanged: (newPos) {
+                print("Nueva posición: $newPos");
+                // Puedes guardar, mostrar o usar esta posición como quieras
+              },
             ),
           ],
         ),
