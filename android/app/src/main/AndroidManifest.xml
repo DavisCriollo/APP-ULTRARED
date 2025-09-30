@@ -3,6 +3,11 @@
         android:label="ultrared"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+            <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAoWdXxoJw4oM47HDqbpGEYxaI1D2i0kGU" 
+            />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"

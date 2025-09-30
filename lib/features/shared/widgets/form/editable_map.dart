@@ -3,7 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
 
 const String googleApiKey =
-    ""; // Reemplaza con tu clave real
+    "AIzaSyAoWdXxoJw4oM47HDqbpGEYxaI1D2i0kGU"; // Reemplaza con tu clave real
 
 class EditableMap extends StatefulWidget {
   final LatLng initialPosition;
