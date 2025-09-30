@@ -1,5 +1,4 @@
-import 'dart:async';
-
+import 'dart:async'; 
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +16,7 @@ class GenericDelegate<T> extends SearchDelegate<SearchGenericResult<T>> {
   final void Function(String search) setSearch;
   final Widget Function(T item, void Function(BuildContext, T) onItemSelected)
       itemWidgetBuilder;
-
+  final int time;
   final bool onlySelect;
   final Widget? customWidget; // Nuevo parámetro opcional
   List<T> initialItems;
@@ -30,6 +29,7 @@ class GenericDelegate<T> extends SearchDelegate<SearchGenericResult<T>> {
     required this.initialItems,
     required this.setSearch,
     required this.itemWidgetBuilder,
+    this.time = 250,
     this.onlySelect = true,
     this.customWidget, // Inicializamos el nuevo parámetro
   }) : super(
@@ -51,7 +51,7 @@ class GenericDelegate<T> extends SearchDelegate<SearchGenericResult<T>> {
     loadingStream.add(true);
 
     _debounceTimer = Timer(
-      const Duration(milliseconds: 250),
+      Duration(milliseconds: time),
       () async {
         if (search.isEmpty) {
           if (!debounceItems.isClosed) {
@@ -59,7 +59,7 @@ class GenericDelegate<T> extends SearchDelegate<SearchGenericResult<T>> {
           }
           if (!loadingStream.isClosed) {
             loadingStream.add(false);
-          } 
+          }
         }
         final items = await searchItems(search: search);
         initialItems = items;

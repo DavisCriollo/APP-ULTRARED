@@ -6,7 +6,7 @@ import 'package:ultrared/features/shared/delegate/generic_delegate.dart';
 import 'package:ultrared/features/shared/delegate/item_generic_search.dart';
 import 'package:ultrared/features/shared/msg/show_snackbar.dart'; 
 
-Future<Cliente?> searchClientesForeignDelegate({
+Future<Persona?> searchClientesForeignDelegate({
   required BuildContext context,
   required WidgetRef ref,
   required String query, 
@@ -39,14 +39,14 @@ Future<Cliente?> searchClientesForeignDelegate({
             NotificationsService.show(
                 context, res.error, SnackbarCategory.error);
           }
-          return <Cliente>[];
+          return <Persona>[];
         }
         return res.resultado;
       },
       setSearch: (arg) {
         // queryUpdated = arg;
       },
-      initialItems: <Cliente>[],
+      initialItems: <Persona>[],
     ),
   );
   return res?.item;

@@ -7,12 +7,14 @@ String normalize(String? s) => (s ?? '').trim().toLowerCase();
 Future<T?> setITemGenericDelegate<T>({
   required BuildContext context,
   required List<T> initialItems,
-  required String Function(T item) titleBuilder,  
+  required String Function(T item) titleBuilder,
+  required int time,
 }) async {
   final res = await showSearch<SearchGenericResult<T>>(
     context: context,
     query: '',
     delegate: GenericDelegate<T>(
+      time: time,
       itemWidgetBuilder: (item, onItemSelected) {
         return ItemGenericSearch(
           item: item,

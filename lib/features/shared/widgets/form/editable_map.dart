@@ -1,35 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
-
-const String googleApiKey =
-    "AIzaSyAoWdXxoJw4oM47HDqbpGEYxaI1D2i0kGU"; // Reemplaza con tu clave real
+import 'package:ultrared/config/config.dart';
+import 'package:ultrared/features/shared/shared.dart';
 
 class EditableMap extends StatefulWidget {
-  final LatLng initialPosition;
+  final LatLng position;
   final Function(LatLng)? onPositionChanged;
 
   const EditableMap({
-    Key? key,
-    required this.initialPosition,
+    super.key,
+    required this.position,
     this.onPositionChanged,
-  }) : super(key: key);
+  });
 
   @override
-  _EditableMapState createState() => _EditableMapState();
+  EditableMapState createState() => EditableMapState();
 }
 
-class _EditableMapState extends State<EditableMap> {
+class EditableMapState extends State<EditableMap> {
   late GoogleMapController mapController;
   late LatLng _markerPosition;
   final TextEditingController _searchController = TextEditingController();
-  final GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: googleApiKey);
+  final GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: Environment.mapApi);
   List<Prediction> _suggestions = [];
 
   @override
   void initState() {
     super.initState();
-    _markerPosition = widget.initialPosition;
+    _markerPosition = widget.position;
   }
 
   void _onMapCreated(GoogleMapController controller) {
@@ -88,12 +87,24 @@ class _EditableMapState extends State<EditableMap> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                TextField(
+                CustomInputField(
                   controller: _searchController,
-                  decoration: InputDecoration(
-                    hintText: "Buscar ubicación...",
-                    border: OutlineInputBorder(),
-                  ),
+                  label: "Buscar ubicación...",
+                  suffixIcon: IconButton(
+                      onPressed: () {
+                        if (_searchController.text.isNotEmpty) {
+                          setState(() {
+                            _suggestions = [];
+                            _searchController.text = '';
+                          });
+
+                          return;
+                        }
+                      },
+                      icon: Icon(
+                        Icons.cancel,
+                        color: Colors.red,
+                      )),
                   onChanged: _searchPlaces,
                 ),
                 if (_suggestions.isNotEmpty)

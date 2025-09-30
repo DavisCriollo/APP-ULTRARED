@@ -157,8 +157,8 @@ class Actividad {
       correoNuevoRegistro: '',
       actaIdPlanInternet: 0,
       actaUbicacion: Ubicacion(
-        longitud: "",
-        latitud: "",
+        longitud: 0,
+        latitud: 0,
       ),
     );
   }

@@ -7,4 +7,5 @@ class Environment {
 
   static String apiUrl = dotenv.env['API_URL'] ?? ''; 
   static String serverPhpUrl = dotenv.env['SERVER_PHP'] ?? '';
+  static String mapApi = dotenv.env['MAP_API'] ?? '';
 }

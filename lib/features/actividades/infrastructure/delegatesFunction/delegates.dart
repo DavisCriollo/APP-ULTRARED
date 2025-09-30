@@ -16,6 +16,7 @@ Future<SearchGenericResult<Actividad>?> searchActividades(
       query: actividadesState.search,
       context: context,
       delegate: GenericDelegate(
+        
         onlySelect: false,
         itemWidgetBuilder: (item, onItemSelected) {
           return ActividadCard(

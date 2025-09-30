@@ -282,8 +282,12 @@ class ActividadesViewState extends ConsumerState<ActividadesScreen> {
                   Expanded(
                     child: ListView.builder(
                       controller: scrollController,
-                      itemCount: actividadesState.actividades.length,
+                      itemCount: actividadesState.actividades.length + 1,
                       itemBuilder: (context, index) {
+                        if (index == actividadesState.actividades.length) {
+                          return SizedBox(height: 80); // Espacio dinámico
+                        }
+
                         final actividad = actividadesState.actividades[index];
                         return ActividadCard(
                           actividad: actividad,
@@ -291,24 +295,12 @@ class ActividadesViewState extends ConsumerState<ActividadesScreen> {
                           redirect: true,
                           loadActividad: loadActividad,
                           onDelete: () async {
-                            // if (isAdmin) {
-                            //   final res = await cupertinoModal(
-                            //       context,
-                            //       size,
-                            //       '¿Esta seguro de eliminar este registro: ${actividad.ccNomCliente}?',
-                            //       ['SI', 'NO']);
-                            //   if (res == 'SI') {
-                            //     // deleteActividad(actividad.cajaId);
-                            //   }
-                            // }
+                            // lógica de eliminación
                           },
                         );
                       },
                     ),
                   ),
-                  SizedBox(
-                    height: size.hScreen(12),
-                  )
                 ],
               ),
             ),

@@ -1,8 +1,9 @@
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ultrared/features/shared/helpers/parse.dart';
 
 class Ubicacion {
-  String longitud;
-  String latitud;
+  double longitud;
+  double latitud;
 
   Ubicacion({
     required this.longitud,
@@ -10,8 +11,13 @@ class Ubicacion {
   });
 
   factory Ubicacion.fromJson(Map<String, dynamic> json) => Ubicacion(
-        longitud: Parse.parseDynamicToString(json["longitud"]),
-        latitud: Parse.parseDynamicToString(json["latitud"]),
+        longitud: Parse.parseDynamicToDouble(json["longitud"]),
+        latitud: Parse.parseDynamicToDouble(json["latitud"]),
+      );
+
+  factory Ubicacion.fromLatLng(LatLng latLng) => Ubicacion(
+        longitud: Parse.parseDynamicToDouble(latLng.longitude),
+        latitud: Parse.parseDynamicToDouble(latLng.latitude),
       );
 
   Map<String, dynamic> toJson() => {

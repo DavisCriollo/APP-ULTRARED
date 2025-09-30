@@ -1,6 +1,6 @@
 import 'package:ultrared/features/shared/helpers/parse.dart';
 
-class Cliente {
+class Persona {
   final String perNombreComercial;
   final List<String> perEmpresa;
   final String perPais;
@@ -44,7 +44,7 @@ class Cliente {
   final String perCompra;
   final String ciudad;
   final String sector;
-  Cliente({
+  Persona({
     required this.perNombreComercial,
     required this.perEmpresa,
     required this.perPais,
@@ -92,7 +92,7 @@ class Cliente {
      
   });
 
-  factory Cliente.fromJson(Map<String, dynamic> json) => Cliente(
+  factory Persona.fromJson(Map<String, dynamic> json) => Persona(
         perNombreComercial: json["perNombreComercial"] ?? '',
         perEmpresa: List<String>.from(
             Parse.parseDynamicToListString(json["perEmpresa"]).map((x) => x)),

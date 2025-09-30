@@ -11,7 +11,7 @@ import 'package:ultrared/features/shared/errors/error_api.dart';
 //       {required this.resultado, required this.error, this.total = 0});
 // }
 class ResponseSearchClientes {
-  final List<Cliente> resultado;
+  final List<Persona> resultado;
   final String error;
 
   ResponseSearchClientes({
@@ -42,8 +42,8 @@ class ClientesRepository {
       // }&datos=${datos}`
       final response = await dio.get('/proveedores/agregarperfil/0',
           queryParameters: queryParameters);
-      final List<Cliente> newClientes = response.data['data']
-          .map<Cliente>((e) => Cliente.fromJson(e))
+      final List<Persona> newClientes = response.data['data']
+          .map<Persona>((e) => Persona.fromJson(e))
           .toList();
 
       return ResponseSearchClientes(
