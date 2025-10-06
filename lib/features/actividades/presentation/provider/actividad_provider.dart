@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:ultrared/features/actividades/domain/entities/actividad.dart';
+import 'package:ultrared/features/actividades/domain/entities/ubicacion.dart';
 import 'package:ultrared/features/actividades/presentation/provider/actividades_provider.dart';
 import 'package:ultrared/features/auth/presentation/providers/auth_provider.dart';
 import 'package:ultrared/features/shared/domain/entities/ciudad.dart';
@@ -48,18 +49,30 @@ class ActividadFormNotifier extends StateNotifier<ActividadFormState> {
 
           // placasData: [actividad.venOtrosDetalles],
         )) {
-    // loadActividad();
+    getUbicacion();
+  }
+
+  void getUbicacion() async {
+    state = state.copyWith(
+      isLoading: true,
+    );
+    state = state.copyWith(ubicacionObtenida: await Ubicacion.obtenerActual());
+    state = state.copyWith(
+      isLoading: false,
+    );
   }
 
   void loadActividad(Actividad actividadToActive) async {
     state = state.copyWith(
       isLoading: false,
-      actividadForm: actividadToActive,
+      actividadForm: actividadToActive.actaId == 0
+          ? actividadToActive.copyWith(actaUbicacion: state.ubicacionObtenida)
+          : actividadToActive,
       actividadActive: actividadToActive,
     );
   }
 
-  void defaultActividad() async {
+  void defaultActividad() {
     state = state.copyWith(
       isLoading: true,
       actividadForm: Actividad.defaultActividad(),
@@ -76,9 +89,10 @@ class ActividadFormNotifier extends StateNotifier<ActividadFormState> {
     if (submit) {
       state = state.copyWith(
         formStatus: state.formStatus.copyWith(
-            isPosted: true,
-            // TODO: VALIDAR SI ES VALIDO
-            isFormValid: false),
+          isPosted: true,
+          // TODO: VALIDAR SI ES VALIDO
+          isFormValid: false,
+        ),
         // actividadForm: state.actividadForm.copyWith(
         //     // venRucCliente: state.actividadForm.venRucCliente,
         //     ),
@@ -179,8 +193,10 @@ class ActividadFormState {
   final Actividad actividadActive;
   final Actividad actividadForm;
   final Formstatus formStatus;
+  final Ubicacion? ubicacionObtenida;
   //*params
   final List<CiuSector> sectoresData;
+
   ActividadFormState({
     //* VENTA
     this.isLoading = true,
@@ -189,6 +205,7 @@ class ActividadFormState {
     required this.actividadActive,
     required this.actividadForm,
     required this.formStatus,
+    this.ubicacionObtenida,
     //*params
     this.sectoresData = const [],
   }); // Provide default value here
@@ -200,6 +217,7 @@ class ActividadFormState {
     Actividad? actividadActive,
     Actividad? actividadForm,
     Formstatus? formStatus,
+    Ubicacion? ubicacionObtenida,
     //*params
     List<CiuSector>? sectoresData,
   }) {
@@ -212,6 +230,7 @@ class ActividadFormState {
       actividadActive: actividadActive ?? this.actividadActive,
       actividadForm: actividadForm ?? this.actividadForm,
       formStatus: formStatus ?? this.formStatus,
+      ubicacionObtenida: ubicacionObtenida ?? this.ubicacionObtenida,
       //*params
       sectoresData: sectoresData ?? this.sectoresData,
     );

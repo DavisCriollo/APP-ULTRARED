@@ -57,6 +57,9 @@ class CustomInputField extends StatelessWidget {
 
     return Column(
       children: [
+        SizedBox(
+          height: lines != null && lines! > 1 ? 10 : 0,
+        ),
         TextFormField(
           onTap: onTap,
           autofocus: autofocus,
@@ -89,9 +92,7 @@ class CustomInputField extends StatelessWidget {
             contentPadding: const EdgeInsets.symmetric(
                 vertical: 4, // Reducir el padding horizontal
                 horizontal: 4),
-            floatingLabelBehavior: (lines ?? 1) > 1
-                ? FloatingLabelBehavior.always
-                : FloatingLabelBehavior.auto,
+            floatingLabelBehavior: FloatingLabelBehavior.auto,
             floatingLabelStyle: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 15,

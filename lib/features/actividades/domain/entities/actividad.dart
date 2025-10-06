@@ -156,10 +156,7 @@ class Actividad {
       planMegasInternet: "",
       correoNuevoRegistro: '',
       actaIdPlanInternet: 0,
-      actaUbicacion: Ubicacion(
-        longitud: 0,
-        latitud: 0,
-      ),
+      actaUbicacion: Ubicacion(longitud: 0, latitud: 0),
     );
   }
 
@@ -379,7 +376,6 @@ class Actividad {
         "correo_nuevo_registro": planMegasInternet,
       };
 }
-
 
 class BusquedaActividades {
   final String actaDocCliente;

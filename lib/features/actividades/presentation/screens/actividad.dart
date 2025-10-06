@@ -1,9 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ultrared/features/actividades/domain/entities/actividad.dart';
-import 'package:ultrared/features/actividades/domain/entities/ubicacion.dart';
 import 'package:ultrared/features/actividades/presentation/provider/actividad_provider.dart';
 import 'package:ultrared/features/clientes/infrastructure/delegatesFunction/delegates.dart';
 import 'package:ultrared/features/shared/infrastructure/delegatesFunction/delegates.dart';
@@ -11,10 +9,10 @@ import 'package:ultrared/features/shared/msg/show_snackbar.dart';
 import 'package:ultrared/features/shared/provider/shared_data_provider.dart';
 import 'package:ultrared/features/shared/shared.dart';
 import 'package:ultrared/features/shared/utils/responsive.dart';
+import 'package:ultrared/features/shared/widgets/form/button_map.dart';
 import 'package:ultrared/features/shared/widgets/form/custom_date_picker_button.dart';
 import 'package:ultrared/features/shared/widgets/form/custom_expandable_email_list.dart';
 import 'package:ultrared/features/shared/widgets/form/custom_expandable_list_with_delegate.dart';
-import 'package:ultrared/features/shared/widgets/form/editable_map.dart';
 
 class ActividadScreen extends ConsumerWidget {
   const ActividadScreen({
@@ -127,7 +125,8 @@ class _ActividadForm extends ConsumerStatefulWidget {
 }
 
 class _ActividadFormState extends ConsumerState<_ActividadForm> {
-  // late TextEditingController docController = TextEditingController();
+  late TextEditingController obsVenController = TextEditingController();
+  late TextEditingController obsTecController = TextEditingController();
   bool isLoading = false;
   @override
   void initState() {
@@ -141,13 +140,16 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
           );
       ref.read(sharedDataProvider.notifier).loadServicios();
     });
-    // docController =
-    // TextEditingController(text: widget.actividad.actaDireccionCliente);
+    obsVenController =
+        TextEditingController(text: widget.actividad.actaCalidadIns);
+    obsTecController =
+        TextEditingController(text: widget.actividad.actaDetalleEstado);
   }
 
   @override
   void dispose() {
-    // docController.dispose();
+    obsVenController.dispose();
+    obsTecController.dispose();
     super.dispose();
   }
 
@@ -365,42 +367,15 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
               values: actividadState.actividadForm.actaSector,
               onTap: setNewSectorDelegate,
             ),
-            IconButton(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text('Selecciona la ubicación'),
-                      content: SizedBox(
-                        width: double.maxFinite,
-                        height: double.maxFinite,
-                        child: EditableMap(
-                          position: LatLng(
-                            actividadState.actividadForm.actaUbicacion.latitud,
-                            actividadState.actividadForm.actaUbicacion.longitud,
-                          ),
-                          onPositionChanged: (newPos) {
-                            updateForm(
-                              actividadForm: actividadFormCopyWith(
-                                actaUbicacion: Ubicacion.fromLatLng(newPos),
-                              ),
-                            );
-                            // Puedes guardar, mostrar o usar esta posición como quieras
-                          },
-                        ),
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: Text('Cerrar'),
-                        ),
-                      ],
-                    );
-                  },
+            ButtonMap(
+              ubicacion: actividadState.actividadForm.actaUbicacion,
+              onUbicacionActualizada: (nuevaUbicacion) {
+                updateForm(
+                  actividadForm: actividadFormCopyWith(
+                    actaUbicacion: nuevaUbicacion,
+                  ),
                 );
               },
-              icon: Icon(Icons.map),
             ),
             CustomSelectField(
               bold: false,
@@ -439,64 +414,93 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
                 Option(label: "Soporte Remoto", value: "Soporte Remoto"),
               ],
             ),
-            CustomDatePickerButton(
-                getDate: (value) {
-                  updateForm(
-                    actividadForm:
-                        actividadFormCopyWith(actaFechaInstalacion: value),
-                  );
-                },
-                label: 'Fecha Instalación',
-                value: actividadState.actividadForm.actaFechaInstalacion),
-            CustomInputField(
-              onTap: setVendedorDelegate,
-              readOnly: true,
-              controller: TextEditingController(
-                  text:
-                      '${actividadState.actividadForm.actaDocVendedor} ${actividadState.actividadForm.actaNombreVendedor}'
-                          .trim()),
-              label: 'Vendedor',
-              onChanged: (p0) {},
-              suffixIcon: IconButton(
-                onPressed: setVendedorDelegate,
-                icon: Icon(
-                  Icons.search,
-                  color: colors.primary,
+            if (actividadState.actividadForm.actaOpcion == "Nueva Instalación")
+              CustomDatePickerButton(
+                  getDate: (value) {
+                    updateForm(
+                      actividadForm:
+                          actividadFormCopyWith(actaFechaInstalacion: value),
+                    );
+                  },
+                  label: 'Fecha Instalación',
+                  value: actividadState.actividadForm.actaFechaInstalacion),
+            if (actividadState.actividadForm.actaOpcion == "Nueva Instalación")
+              CustomInputField(
+                onTap: setVendedorDelegate,
+                readOnly: true,
+                controller: TextEditingController(
+                    text:
+                        '${actividadState.actividadForm.actaDocVendedor} ${actividadState.actividadForm.actaNombreVendedor}'
+                            .trim()),
+                label: 'Vendedor',
+                onChanged: (p0) {},
+                suffixIcon: IconButton(
+                  onPressed: setVendedorDelegate,
+                  icon: Icon(
+                    Icons.search,
+                    color: colors.primary,
+                  ),
                 ),
               ),
+            if (actividadState.actividadForm.actaOpcion == "Nueva Instalación")
+              CustomInputField(
+                onTap: setPlanDelegate,
+                readOnly: true,
+                controller: TextEditingController(
+                    text:
+                        "${actividadState.actividadForm.planNombreInternet} ** \$${actividadState.actividadForm.planValorInternet} ** MB${actividadState.actividadForm.planMegasInternet}"
+                            .trim()),
+                label: 'Plan',
+                onChanged: (p0) {},
+                suffixIcon: IconButton(
+                  onPressed: setPlanDelegate,
+                  icon: Icon(
+                    Icons.search,
+                    color: colors.primary,
+                  ),
+                ),
+              ),
+            if (actividadState.actividadForm.actaOpcion == "Visita Técnica" ||
+                actividadState.actividadForm.actaOpcion == "Soporte Remoto")
+              CustomInputField(
+                onTap: setServicioDelegate,
+                readOnly: true,
+                controller: TextEditingController(
+                    text: actividadState.actividadForm.actaServiciosVisita
+                        .trim()),
+                label: 'Servicio',
+                onChanged: (p0) {},
+                suffixIcon: IconButton(
+                  onPressed: setServicioDelegate,
+                  icon: Icon(
+                    Icons.search,
+                    color: colors.primary,
+                  ),
+                ),
+              ),
+            CustomInputField(
+              controller: obsVenController,
+              label: 'Observación Ventas',
+              onChanged: (p0) {
+                obsVenController.text = p0;
+                updateForm(
+                    actividadForm: actividadFormCopyWith(actaCalidadIns: p0));
+              },
+              lines: 3,
+              // errorMessage:
+              //     clienteFState.clienteForm.perDocNumeroInput.errorMessage,
             ),
             CustomInputField(
-              onTap: setPlanDelegate,
-              readOnly: true,
-              controller: TextEditingController(
-                  text:
-                      "${actividadState.actividadForm.planNombreInternet} ** \$${actividadState.actividadForm.planValorInternet} ** MB${actividadState.actividadForm.planMegasInternet}"
-                          .trim()),
-              label: 'Plan',
-              onChanged: (p0) {},
-              suffixIcon: IconButton(
-                onPressed: setPlanDelegate,
-                icon: Icon(
-                  Icons.search,
-                  color: colors.primary,
-                ),
-              ),
-            ),
-            CustomInputField(
-              onTap: setServicioDelegate,
-              readOnly: true,
-              controller: TextEditingController(
-                  text:
-                      actividadState.actividadForm.actaServiciosVisita.trim()),
-              label: 'Servicio',
-              onChanged: (p0) {},
-              suffixIcon: IconButton(
-                onPressed: setServicioDelegate,
-                icon: Icon(
-                  Icons.search,
-                  color: colors.primary,
-                ),
-              ),
+              controller: obsTecController,
+              label: 'Observación Técnico',
+              onChanged: (p0) {
+                obsTecController.text = p0;
+                updateForm(
+                    actividadForm: actividadFormCopyWith(actaDetalleEstado: p0));
+              },
+              lines: 3,
+              // errorMessage:
+              //     clienteFState.clienteForm.perDocNumeroInput.errorMessage,
             ),
             SizedBox(
               height: 150,

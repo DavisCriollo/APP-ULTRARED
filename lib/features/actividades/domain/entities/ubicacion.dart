@@ -1,4 +1,5 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:ultrared/features/shared/helpers/parse.dart';
 
 class Ubicacion {
@@ -24,4 +25,42 @@ class Ubicacion {
         "longitud": longitud,
         "latitud": latitud,
       };
+
+  /// 📍 Obtiene la ubicación actual del dispositivo
+  static Future<Ubicacion> obtenerActual() async {
+    try {
+      bool servicioHabilitado = await Geolocator.isLocationServiceEnabled();
+      if (!servicioHabilitado) {
+        return Ubicacion(longitud: 0, latitud: 0);
+      }
+
+      LocationPermission permiso = await Geolocator.checkPermission();
+      if (permiso == LocationPermission.denied) {
+        permiso = await Geolocator.requestPermission();
+        if (permiso == LocationPermission.denied) {
+          return Ubicacion(longitud: 0, latitud: 0);
+        }
+      }
+
+      if (permiso == LocationPermission.deniedForever) {
+        return Ubicacion(longitud: 0, latitud: 0);
+      }
+
+      // final settings = LocationSettings(
+      //   accuracy: LocationAccuracy.high,
+      //   distanceFilter: 10,
+      // );
+
+      Position posicion = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      return Ubicacion(
+        longitud: posicion.longitude,
+        latitud: posicion.latitude,
+      );
+    } catch (e) {
+      return Ubicacion(longitud: 0, latitud: 0);
+    }
+  }
 }

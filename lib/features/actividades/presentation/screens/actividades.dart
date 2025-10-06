@@ -1,7 +1,8 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ultrared/features/actividades/domain/entities/actividad.dart';
+import 'package:ultrared/features/actividades/domain/entities/actividad.dart'; 
 import 'package:ultrared/features/actividades/infrastructure/delegatesFunction/delegates.dart';
 import 'package:ultrared/features/actividades/presentation/provider/actividad_provider.dart';
 import 'package:ultrared/features/actividades/presentation/provider/actividades_provider.dart';
@@ -62,6 +63,7 @@ class ActividadesViewState extends ConsumerState<ActividadesScreen> {
     final colors = Theme.of(context).colorScheme;
     final size = Responsive.of(context);
     final actividadesState = ref.watch(actividadesProvider);
+    final isLoadingActividad = ref.watch(actividadFormProvider).isLoading;
     final loadActividad =
         ref.watch(actividadFormProvider.notifier).loadActividad;
     // final deleteActividad =
@@ -361,11 +363,20 @@ class ActividadesViewState extends ConsumerState<ActividadesScreen> {
         //   ),
         // ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            loadActividad(Actividad.defaultActividad());
-            context.push('/actividad/0');
-          },
-          child: const Icon(Icons.add),
+          onPressed: isLoadingActividad
+              ? null
+              : () async {
+                  loadActividad(Actividad.defaultActividad());
+                  context.push('/actividad/0');
+                },
+          child: isLoadingActividad
+              ? SpinPerfect(
+                  duration: const Duration(seconds: 1),
+                  spins: 10,
+                  infinite: true,
+                  child: const Icon(Icons.refresh),
+                )
+              : const Icon(Icons.add),
         ),
       ),
     );
