@@ -3,16 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ultrared/features/actividades/domain/entities/actividad.dart';
 import 'package:ultrared/features/actividades/presentation/provider/actividad_provider.dart';
-import 'package:ultrared/features/clientes/infrastructure/delegatesFunction/delegates.dart';
+import 'package:ultrared/features/clientes/infrastructure/delegatesFunction/delegates.dart'; 
 import 'package:ultrared/features/shared/infrastructure/delegatesFunction/delegates.dart';
 import 'package:ultrared/features/shared/msg/show_snackbar.dart';
 import 'package:ultrared/features/shared/provider/shared_data_provider.dart';
+import 'package:ultrared/features/shared/provider/upload_delete_files_provider.dart';
 import 'package:ultrared/features/shared/shared.dart';
 import 'package:ultrared/features/shared/utils/responsive.dart';
 import 'package:ultrared/features/shared/widgets/form/button_map.dart';
 import 'package:ultrared/features/shared/widgets/form/custom_date_picker_button.dart';
 import 'package:ultrared/features/shared/widgets/form/custom_expandable_email_list.dart';
 import 'package:ultrared/features/shared/widgets/form/custom_expandable_list_with_delegate.dart';
+import 'package:ultrared/features/shared/widgets/form/image_gallery.dart';
 
 class ActividadScreen extends ConsumerWidget {
   const ActividadScreen({
@@ -21,6 +23,7 @@ class ActividadScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final actividadState = ref.watch(actividadFormProvider);
+
     ref.listen(
       actividadFormProvider,
       (_, next) {
@@ -496,11 +499,46 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
               onChanged: (p0) {
                 obsTecController.text = p0;
                 updateForm(
-                    actividadForm: actividadFormCopyWith(actaDetalleEstado: p0));
+                    actividadForm:
+                        actividadFormCopyWith(actaDetalleEstado: p0));
               },
               lines: 3,
               // errorMessage:
               //     clienteFState.clienteForm.perDocNumeroInput.errorMessage,
+            ),
+            IconButton(
+                onPressed: () async {
+                  final res = await ref
+                      .read(uploadDeleteFilesProvider)
+                      .uploadFiles(
+                          imagenes: actividadState.actividadForm.actaFotos,
+                          tipo: 'archivo');
+
+                  print(res.resultado);
+                },
+                icon: Icon(Icons.cloud_upload)),
+            ImageGallery(
+              images: actividadState.actividadForm.actaFotos,
+              size: size,
+              onAdd: (imagenes) async {
+                updateForm(
+                    actividadForm: actividadFormCopyWith(actaFotos: [
+                  ...actividadState.actividadForm.actaFotos,
+                  ...imagenes
+                ]));
+              },
+              onDelete: (url, isUploaded) {
+                if (isUploaded) {
+                  //  TODO: GUARDAR EN LOS URLS PARA ELIMINAR
+                }
+                updateForm(
+                    actividadForm: actividadFormCopyWith(
+                        actaFotos: actividadState.actividadForm.actaFotos
+                            .where(
+                              (element) => element.url != url,
+                            )
+                            .toList()));
+              },
             ),
             SizedBox(
               height: 150,

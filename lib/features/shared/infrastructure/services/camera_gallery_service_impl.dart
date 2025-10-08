@@ -14,6 +14,12 @@ class CameraGalleryServiceImpl extends CameraGalleryService {
     return photo.path;
   }
 
+  Future<List<String>> selectPhotos() async {
+    final List<XFile> photos = await _picker.pickMultiImage(imageQuality: 80);
+    if (photos.isEmpty) return [];
+    return photos.map((p) => p.path).toList();
+  }
+
   @override
   Future<String?> takePhoto() async {
     final XFile? photo = await _picker.pickImage(

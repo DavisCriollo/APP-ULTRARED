@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:ultrared/features/actividades/domain/entities/ubicacion.dart';
+import 'package:ultrared/features/shared/domain/entities/imagen.dart';
 import 'package:ultrared/features/shared/helpers/get_date.dart';
 import 'package:ultrared/features/shared/helpers/parse.dart';
 
@@ -20,7 +21,7 @@ class Actividad {
   String actaRedWifi;
   String actaClave;
   String actaClienteRegulador;
-  List<dynamic> actaFotos;
+  List<Imagen> actaFotos;
   Ubicacion actaUbicacion;
   List<dynamic> actaEquiposInstalados;
   List<dynamic> actaCargosAdicionales;
@@ -160,62 +161,66 @@ class Actividad {
     );
   }
 
-  factory Actividad.fromJson(Map<String, dynamic> json) => Actividad(
-        actaId: json["actaId"],
-        actaIdCliente: json["actaIdCliente"],
-        actaIdPersonaEntrega: json["actaIdPersonaEntrega"],
-        actaIdVendedor: json["actaIdVendedor"],
-        actaFecha: json["actaFecha"],
-        actaFechaInstalacion: json["actaFechaInstalacion"],
-        actaOpcion: json["actaOpcion"],
-        actaEstado: json["actaEstado"],
-        actaDetalleEstado: json["actaDetalleEstado"],
-        actaTipo: json["actaTipo"],
-        actaSeEncuentraCliente: json["actaSeEncuentraCliente"],
-        actaServiciosVisita: json["actaServiciosVisita"],
-        actaRedWifi: json["actaRedWifi"],
-        actaClave: json["actaClave"],
-        actaClienteRegulador: json["actaClienteRegulador"],
-        actaFotos: List<dynamic>.from(json["actaFotos"].map((x) => x)),
-        actaUbicacion: Ubicacion.fromJson(json["actaUbicacion"]),
-        actaEquiposInstalados:
-            List<dynamic>.from(json["actaEquiposInstalados"].map((x) => x)),
-        actaCargosAdicionales:
-            List<dynamic>.from(json["actaCargosAdicionales"].map((x) => x)),
-        actaConfigRouter: json["actaConfigRouter"],
-        actaValorRouter: json["actaValorRouter"],
-        actaCambioPatch: json["actaCambioPatch"],
-        actaValorPatch: json["actaValorPatch"],
-        actaCalidadIns: json["actaCalidadIns"],
-        actaSolucionReq: json["actaSolucionReq"],
-        actaRecNombre: json["actaRecNombre"],
-        actaRecFirma: json["actaRecFirma"],
-        actaEntFirma: json["actaEntFirma"],
-        actaUser: json["actaUser"],
-        actaEmpresa: json["actaEmpresa"],
-        actaIdPlanInternet: json["actaIdPlanInternet"],
-        actaCiudad: json["actaCiudad"] ?? '',
-        actaSector: Parse.parseDynamicToListString(json["actaSector"]),
-        actaFecReg: json["actaFecReg"],
-        actaFecUpd: json["actaFecUpd"],
-        actaDocCliente: json["actaDocCliente"],
-        actaNombreCliente: json["actaNombreCliente"],
-        actaDireccionCliente: json["actaDireccionCliente"],
-        actaTelCliente: List<String>.from(json["actaTelCliente"].map((x) => x)),
-        actaEmailCliente:
-            List<String>.from(json["actaEmailCliente"].map((x) => x)),
-        actaEntDoc: json["actaEntDoc"],
-        actaEntNombre: json["actaEntNombre"],
-        actaDocVendedor: json["actaDocVendedor"] ?? '',
-        actaNombreVendedor: json["actaNombreVendedor"] ?? '',
-        planNombreInternet:
-            Parse.parseDynamicToString(json["planNombreInternet"]),
-        planValorInternet:
-            Parse.parseDynamicToString(json["planValorInternet"]),
-        planMegasInternet:
-            Parse.parseDynamicToString(json["planMegasInternet"]),
-        correoNuevoRegistro: json["correo_nuevo_registro"] ?? '',
-      );
+  factory Actividad.fromJson(Map<String, dynamic> json) {
+    return Actividad(
+      actaId: json["actaId"],
+      actaIdCliente: json["actaIdCliente"],
+      actaIdPersonaEntrega: json["actaIdPersonaEntrega"],
+      actaIdVendedor: json["actaIdVendedor"],
+      actaFecha: json["actaFecha"],
+      actaFechaInstalacion: json["actaFechaInstalacion"],
+      actaOpcion: json["actaOpcion"],
+      actaEstado: json["actaEstado"],
+      actaDetalleEstado: json["actaDetalleEstado"],
+      actaTipo: json["actaTipo"],
+      actaSeEncuentraCliente: json["actaSeEncuentraCliente"],
+      actaServiciosVisita: json["actaServiciosVisita"],
+      actaRedWifi: json["actaRedWifi"],
+      actaClave: json["actaClave"],
+      actaClienteRegulador: json["actaClienteRegulador"],
+      actaFotos: List<Imagen>.from(json["actaFotos"].map((x) => x != null
+              ? Imagen.fromJson(x)
+              : Imagen(nombre: 'no-name', url: '')))
+          .where((x) => x.url.isNotEmpty)
+          .toList(),
+      actaUbicacion: Ubicacion.fromJson(json["actaUbicacion"]),
+      actaEquiposInstalados:
+          List<dynamic>.from(json["actaEquiposInstalados"].map((x) => x)),
+      actaCargosAdicionales:
+          List<dynamic>.from(json["actaCargosAdicionales"].map((x) => x)),
+      actaConfigRouter: json["actaConfigRouter"],
+      actaValorRouter: json["actaValorRouter"],
+      actaCambioPatch: json["actaCambioPatch"],
+      actaValorPatch: json["actaValorPatch"],
+      actaCalidadIns: json["actaCalidadIns"],
+      actaSolucionReq: json["actaSolucionReq"],
+      actaRecNombre: json["actaRecNombre"],
+      actaRecFirma: json["actaRecFirma"],
+      actaEntFirma: json["actaEntFirma"],
+      actaUser: json["actaUser"],
+      actaEmpresa: json["actaEmpresa"],
+      actaIdPlanInternet: json["actaIdPlanInternet"],
+      actaCiudad: json["actaCiudad"] ?? '',
+      actaSector: Parse.parseDynamicToListString(json["actaSector"]),
+      actaFecReg: json["actaFecReg"],
+      actaFecUpd: json["actaFecUpd"],
+      actaDocCliente: json["actaDocCliente"],
+      actaNombreCliente: json["actaNombreCliente"],
+      actaDireccionCliente: json["actaDireccionCliente"],
+      actaTelCliente: List<String>.from(json["actaTelCliente"].map((x) => x)),
+      actaEmailCliente:
+          List<String>.from(json["actaEmailCliente"].map((x) => x)),
+      actaEntDoc: json["actaEntDoc"],
+      actaEntNombre: json["actaEntNombre"],
+      actaDocVendedor: json["actaDocVendedor"] ?? '',
+      actaNombreVendedor: json["actaNombreVendedor"] ?? '',
+      planNombreInternet:
+          Parse.parseDynamicToString(json["planNombreInternet"]),
+      planValorInternet: Parse.parseDynamicToString(json["planValorInternet"]),
+      planMegasInternet: Parse.parseDynamicToString(json["planMegasInternet"]),
+      correoNuevoRegistro: json["correo_nuevo_registro"] ?? '',
+    );
+  }
 
   // Nuevo método copyWith
   Actividad copyWith({
@@ -234,7 +239,7 @@ class Actividad {
     String? actaRedWifi,
     String? actaClave,
     String? actaClienteRegulador,
-    List<dynamic>? actaFotos,
+    List<Imagen>? actaFotos,
     Ubicacion? actaUbicacion,
     List<dynamic>? actaEquiposInstalados,
     List<dynamic>? actaCargosAdicionales,
@@ -339,7 +344,7 @@ class Actividad {
         "actaRedWifi": actaRedWifi,
         "actaClave": actaClave,
         "actaClienteRegulador": actaClienteRegulador,
-        "actaFotos": List<dynamic>.from(actaFotos.map((x) => x)),
+        "actaFotos": List<dynamic>.from(actaFotos.map((x) => x.toJson())),
         "actaUbicacion": actaUbicacion.toJson(),
         "actaEquiposInstalados":
             List<dynamic>.from(actaEquiposInstalados.map((x) => x)),
