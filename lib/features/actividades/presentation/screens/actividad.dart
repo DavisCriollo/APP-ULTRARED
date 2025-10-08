@@ -14,6 +14,7 @@ import 'package:ultrared/features/shared/widgets/form/custom_date_picker_button.
 import 'package:ultrared/features/shared/widgets/form/custom_expandable_email_list.dart';
 import 'package:ultrared/features/shared/widgets/form/custom_expandable_list_with_delegate.dart';
 import 'package:ultrared/features/shared/widgets/form/image_gallery.dart';
+import 'package:ultrared/features/shared/widgets/form/signature_field.dart';
 
 class ActividadScreen extends ConsumerWidget {
   const ActividadScreen({
@@ -129,6 +130,8 @@ class _ActividadForm extends ConsumerStatefulWidget {
 class _ActividadFormState extends ConsumerState<_ActividadForm> {
   late TextEditingController obsVenController = TextEditingController();
   late TextEditingController obsTecController = TextEditingController();
+  late TextEditingController ppoeController = TextEditingController();
+  late TextEditingController claveController = TextEditingController();
   bool isLoading = false;
   @override
   void initState() {
@@ -146,12 +149,16 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
         TextEditingController(text: widget.actividad.actaCalidadIns);
     obsTecController =
         TextEditingController(text: widget.actividad.actaDetalleEstado);
+    ppoeController = TextEditingController(text: widget.actividad.actaRedWifi);
+    claveController = TextEditingController(text: widget.actividad.actaClave);
   }
 
   @override
   void dispose() {
     obsVenController.dispose();
     obsTecController.dispose();
+    ppoeController.dispose();
+    claveController.dispose();
     super.dispose();
   }
 
@@ -518,7 +525,27 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
             //   },
             //   icon: Icon(Icons.cloud_upload),
             // ),
-
+    CustomInputField(
+              controller: ppoeController,
+              label: 'PPPoE',
+              onChanged: (p0) {
+                ppoeController.text = p0;
+                updateForm(
+                    actividadForm: actividadFormCopyWith(actaRedWifi: p0));
+              },
+              // errorMessage:
+              //     clienteFState.clienteForm.perDocNumeroInput.errorMessage,
+            ),
+            CustomInputField(
+              controller: claveController,
+              label: 'Clave',
+              onChanged: (p0) {
+                claveController.text = p0;
+                updateForm(actividadForm: actividadFormCopyWith(actaClave: p0));
+              },
+              // errorMessage:
+              //     clienteFState.clienteForm.perDocNumeroInput.errorMessage,
+            ),
             ImageGallery(
               images: actividadState.actividadForm.actaFotos,
               size: size,
@@ -562,16 +589,30 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
               questionText: 'CONFIGURACION ROUTER:',
               size: size,
             ),
+
             CustomRadioBotton(
               selectedValue: actividadState.actividadForm.actaCambioPatch,
               onChanged: (p0) {
                 updateForm(
-                    actividadForm:
-                        actividadFormCopyWith(actaCambioPatch: p0));
+                    actividadForm: actividadFormCopyWith(actaCambioPatch: p0));
               },
               questionText: 'CAMBIO DE PATCH CORD FIBRA: ',
               size: size,
             ),
+            CustomRadioBotton(
+              selectedValue:
+                  actividadState.actividadForm.actaSeEncuentraCliente,
+              onChanged: (p0) {
+                updateForm(
+                    actividadForm:
+                        actividadFormCopyWith(actaSeEncuentraCliente: p0));
+              },
+              questionText: 'SE ENCUENTRA CLIENTE:',
+              size: size,
+            ),
+            SignatureField(),
+
+        
             SizedBox(
               height: 150,
             )
