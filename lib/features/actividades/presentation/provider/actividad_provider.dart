@@ -4,8 +4,7 @@ import 'package:ultrared/features/actividades/domain/entities/actividad.dart';
 import 'package:ultrared/features/actividades/domain/entities/ubicacion.dart';
 import 'package:ultrared/features/actividades/presentation/provider/actividades_provider.dart';
 import 'package:ultrared/features/auth/presentation/providers/auth_provider.dart';
-import 'package:ultrared/features/shared/domain/entities/ciudad.dart';
-import 'package:ultrared/features/shared/domain/entities/imagen.dart';
+import 'package:ultrared/features/shared/domain/entities/ciudad.dart'; 
 import 'package:ultrared/features/shared/infrastructure/form/form_status.dart';
 import 'package:ultrared/features/shared/provider/socket.dart';
 

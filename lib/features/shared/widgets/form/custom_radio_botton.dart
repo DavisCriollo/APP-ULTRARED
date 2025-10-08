@@ -18,27 +18,35 @@ class CustomRadioBotton extends StatelessWidget {
     required this.size,
     this.options = const ['SI', 'NO'],
   });
-
+// ...existing code...
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(
-          questionText,
-          style: const TextStyle(fontSize: 18),
+        Expanded( 
+          child: Text(
+            questionText,
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold), 
+          ),
         ),
-        ...options.map((e) {
-          return Row(
-            children: [
-              Radio<String>(
-                value: e,
-                groupValue: selectedValue,
-                onChanged: onChanged,
-              ),
-              Text(e),
-            ],
-          );
-        }),
+        Expanded( 
+          child: Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: options.map((e) {
+              return Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Radio<String>(
+                    value: e,
+                    groupValue: selectedValue,
+                    onChanged: (v) => onChanged?.call(v),
+                  ),
+                  Text(e),
+                ],
+              );
+            }).toList(),
+          ),
+        ),
       ],
     );
   }

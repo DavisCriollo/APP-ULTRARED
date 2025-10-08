@@ -7,7 +7,6 @@ import 'package:ultrared/features/clientes/infrastructure/delegatesFunction/dele
 import 'package:ultrared/features/shared/infrastructure/delegatesFunction/delegates.dart';
 import 'package:ultrared/features/shared/msg/show_snackbar.dart';
 import 'package:ultrared/features/shared/provider/shared_data_provider.dart';
-import 'package:ultrared/features/shared/provider/upload_delete_files_provider.dart';
 import 'package:ultrared/features/shared/shared.dart';
 import 'package:ultrared/features/shared/utils/responsive.dart';
 import 'package:ultrared/features/shared/widgets/form/button_map.dart';
@@ -506,19 +505,20 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
               // errorMessage:
               //     clienteFState.clienteForm.perDocNumeroInput.errorMessage,
             ),
-            IconButton(
-              onPressed: () async {
-                final res =
-                    await ref.read(uploadDeleteFilesProvider).uploadFiles(
-                          imagenes: actividadState.actividadForm.actaFotos,
-                          tipo: 'archivo',
-                          urlToDelete: actividadState.imagenestoDelete,
-                        );
+            // IconButton(
+            //   onPressed: () async {
+            //     final res = await ref
+            //         .read(uploadDeleteFilesProvider)
+            //         .uploadFiles(
+            //             imagenes: actividadState.actividadForm.actaFotos,
+            //             tipo: 'archivo',
+            //             urlToDelete: actividadState.imagenestoDelete,);
 
-                print(res.resultado);
-              },
-              icon: Icon(Icons.cloud_upload),
-            ),
+            //     print(res.resultado);
+            //   },
+            //   icon: Icon(Icons.cloud_upload),
+            // ),
+
             ImageGallery(
               images: actividadState.actividadForm.actaFotos,
               size: size,
@@ -542,7 +542,36 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
                             .toList()));
               },
             ),
-            
+
+            CustomRadioBotton(
+              selectedValue: actividadState.actividadForm.actaClienteRegulador,
+              onChanged: (p0) {
+                updateForm(
+                    actividadForm:
+                        actividadFormCopyWith(actaClienteRegulador: p0));
+              },
+              questionText: 'EL CLIENTE POSEE REGULADOR DE VOLTAJE:',
+              size: size,
+            ),
+            CustomRadioBotton(
+              selectedValue: actividadState.actividadForm.actaConfigRouter,
+              onChanged: (p0) {
+                updateForm(
+                    actividadForm: actividadFormCopyWith(actaConfigRouter: p0));
+              },
+              questionText: 'CONFIGURACION ROUTER:',
+              size: size,
+            ),
+            CustomRadioBotton(
+              selectedValue: actividadState.actividadForm.actaCambioPatch,
+              onChanged: (p0) {
+                updateForm(
+                    actividadForm:
+                        actividadFormCopyWith(actaCambioPatch: p0));
+              },
+              questionText: 'CAMBIO DE PATCH CORD FIBRA: ',
+              size: size,
+            ),
             SizedBox(
               height: 150,
             )
