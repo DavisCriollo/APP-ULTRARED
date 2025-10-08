@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ultrared/features/actividades/domain/entities/actividad.dart';
 import 'package:ultrared/features/actividades/presentation/provider/actividad_provider.dart';
-import 'package:ultrared/features/clientes/infrastructure/delegatesFunction/delegates.dart'; 
+import 'package:ultrared/features/clientes/infrastructure/delegatesFunction/delegates.dart';
 import 'package:ultrared/features/shared/infrastructure/delegatesFunction/delegates.dart';
 import 'package:ultrared/features/shared/msg/show_snackbar.dart';
 import 'package:ultrared/features/shared/provider/shared_data_provider.dart';
@@ -507,16 +507,18 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
               //     clienteFState.clienteForm.perDocNumeroInput.errorMessage,
             ),
             IconButton(
-                onPressed: () async {
-                  final res = await ref
-                      .read(uploadDeleteFilesProvider)
-                      .uploadFiles(
+              onPressed: () async {
+                final res =
+                    await ref.read(uploadDeleteFilesProvider).uploadFiles(
                           imagenes: actividadState.actividadForm.actaFotos,
-                          tipo: 'archivo');
+                          tipo: 'archivo',
+                          urlToDelete: actividadState.imagenestoDelete,
+                        );
 
-                  print(res.resultado);
-                },
-                icon: Icon(Icons.cloud_upload)),
+                print(res.resultado);
+              },
+              icon: Icon(Icons.cloud_upload),
+            ),
             ImageGallery(
               images: actividadState.actividadForm.actaFotos,
               size: size,
@@ -529,7 +531,7 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
               },
               onDelete: (url, isUploaded) {
                 if (isUploaded) {
-                  //  TODO: GUARDAR EN LOS URLS PARA ELIMINAR
+                  actividadNotifier.addimagenestoDelete(url);
                 }
                 updateForm(
                     actividadForm: actividadFormCopyWith(
@@ -540,6 +542,7 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
                             .toList()));
               },
             ),
+            
             SizedBox(
               height: 150,
             )

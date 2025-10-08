@@ -31,11 +31,12 @@ class UploadFilesRepository {
   Future<ResponseUploadFiles> uploadFiles({
     required List<Imagen> imagenes,
     required String tipo,
+    required List<String> urlToDelete,
   }) async {
     try {
       final imagenesToUpload =
           imagenes.where((img) => !img.url.startsWith('http')).toList();
-      if (imagenesToUpload.isEmpty) {
+      if (imagenesToUpload.isEmpty && urlToDelete.isEmpty) {
         return ResponseUploadFiles(resultado: [], error: '');
       }
       final formData = FormData.fromMap({
@@ -55,7 +56,7 @@ class UploadFilesRepository {
       }
 
       // Enviamos la lista de fotos ya subidas para que el backend la procese (campo 'eliminar')
-      formData.fields.add(MapEntry('eliminar', jsonEncode([])));
+      formData.fields.add(MapEntry('eliminar', jsonEncode(urlToDelete)));
 
       final resp = await dio.post(
         '/upload_delete_multiple_files/uploads',

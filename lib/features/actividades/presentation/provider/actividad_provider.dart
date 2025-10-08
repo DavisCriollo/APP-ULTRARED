@@ -5,6 +5,7 @@ import 'package:ultrared/features/actividades/domain/entities/ubicacion.dart';
 import 'package:ultrared/features/actividades/presentation/provider/actividades_provider.dart';
 import 'package:ultrared/features/auth/presentation/providers/auth_provider.dart';
 import 'package:ultrared/features/shared/domain/entities/ciudad.dart';
+import 'package:ultrared/features/shared/domain/entities/imagen.dart';
 import 'package:ultrared/features/shared/infrastructure/form/form_status.dart';
 import 'package:ultrared/features/shared/provider/socket.dart';
 
@@ -83,6 +84,11 @@ class ActividadFormNotifier extends StateNotifier<ActividadFormState> {
     state = state.copyWith(
       actividadForm: actividadForm ?? state.actividadForm,
     );
+  }
+
+  void addimagenestoDelete(String url) {
+    state =
+        state.copyWith(imagenestoDelete: [...state.imagenestoDelete, url]);
   }
 
   void _touchedEverything(bool submit) {
@@ -196,7 +202,7 @@ class ActividadFormState {
   final Ubicacion? ubicacionObtenida;
   //*params
   final List<CiuSector> sectoresData;
-
+  final List<String> imagenestoDelete;
   ActividadFormState({
     //* VENTA
     this.isLoading = true,
@@ -208,6 +214,7 @@ class ActividadFormState {
     this.ubicacionObtenida,
     //*params
     this.sectoresData = const [],
+    this.imagenestoDelete = const [],
   }); // Provide default value here
 
   ActividadFormState copyWith({
@@ -220,6 +227,7 @@ class ActividadFormState {
     Ubicacion? ubicacionObtenida,
     //*params
     List<CiuSector>? sectoresData,
+    List<String>? imagenestoDelete,
   }) {
     return ActividadFormState(
       //* VENTA
@@ -233,6 +241,7 @@ class ActividadFormState {
       ubicacionObtenida: ubicacionObtenida ?? this.ubicacionObtenida,
       //*params
       sectoresData: sectoresData ?? this.sectoresData,
+      imagenestoDelete: imagenestoDelete ?? this.imagenestoDelete,
     );
   }
 }

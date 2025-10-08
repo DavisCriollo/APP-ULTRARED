@@ -39,6 +39,7 @@ class ImageGallery extends StatelessWidget {
                     right: 8,
                     bottom: 8,
                     child: FloatingActionButton.small(
+                      heroTag: const ValueKey('image_gallery_add_empty'),
                       onPressed: () async {
                         final photPath =
                             await CameraGalleryServiceImpl().selectPhotos();
@@ -100,6 +101,7 @@ class ImageGallery extends StatelessWidget {
                           right: 6,
                           bottom: 6,
                           child: FloatingActionButton.small(
+                            heroTag: ValueKey('image_gallery_add_${image.url}'),
                             onPressed: () async {
                               final photPath = await CameraGalleryServiceImpl()
                                   .selectPhotos();
