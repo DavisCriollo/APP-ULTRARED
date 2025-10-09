@@ -30,7 +30,7 @@ class CustomExpansionTile extends StatelessWidget {
                 color: errorMessage != null ? Colors.red : colors.primary,
                 fontSize: 12,
               ),
-              overflow: TextOverflow.clip, // ← corta con "..."  
+              overflow: TextOverflow.clip, // ← corta con "..."
             ),
           ),
         ],

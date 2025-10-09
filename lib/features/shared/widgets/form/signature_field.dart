@@ -7,14 +7,16 @@ class SignatureField extends StatefulWidget {
   final String? initialImageBase64;
   final void Function(String base64)? onSave;
   final void Function()? onClear;
-  const SignatureField({super.key, this.initialImageBase64, this.onSave, this.onClear});
+  const SignatureField(
+      {super.key, this.initialImageBase64, this.onSave, this.onClear});
 
   @override
   State<SignatureField> createState() => _SignatureFieldState();
 }
 
 class _SignatureFieldState extends State<SignatureField> {
-  final SignatureController _controller = SignatureController(penStrokeWidth: 2, penColor: Colors.black);
+  final SignatureController _controller =
+      SignatureController(penStrokeWidth: 2, penColor: Colors.black);
 
   String? _savedBase64;
 
@@ -60,7 +62,10 @@ class _SignatureFieldState extends State<SignatureField> {
           Image.memory(bytes, fit: BoxFit.contain),
           Row(
             children: [
-              TextButton.icon(onPressed: _clear, icon: const Icon(Icons.change_circle), label: const Text('Rehacer')),
+              TextButton.icon(
+                  onPressed: _clear,
+                  icon: const Icon(Icons.change_circle),
+                  label: const Text('Rehacer')),
             ],
           )
         ],
@@ -73,7 +78,8 @@ class _SignatureFieldState extends State<SignatureField> {
       children: [
         Container(
           height: 200,
-          decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade400)),
+          decoration:
+              BoxDecoration(border: Border.all(color: Colors.grey.shade400)),
           child: Signature(
             controller: _controller,
             backgroundColor: Colors.white,
@@ -82,9 +88,21 @@ class _SignatureFieldState extends State<SignatureField> {
         const SizedBox(height: 8),
         Row(
           children: [
-            TextButton.icon(onPressed: _clear, icon: const Icon(Icons.clear), label: const Text('Limpiar')),
+            TextButton.icon(
+                onPressed: _clear,
+                icon: const Icon(
+                  Icons.clear,
+                  color: Colors.red,
+                ),
+                label: const Text('Limpiar')),
             const SizedBox(width: 8),
-            ElevatedButton.icon(onPressed: _save, icon: const Icon(Icons.save), label: const Text('Guardar')),
+            ElevatedButton.icon(
+                onPressed: _save,
+                icon: const Icon(
+                  Icons.save,
+                  color: Colors.green,
+                ),
+                label: const Text('Guardar')),
           ],
         ),
       ],

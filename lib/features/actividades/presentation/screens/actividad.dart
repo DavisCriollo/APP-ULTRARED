@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ultrared/features/actividades/domain/entities/actividad.dart';
 import 'package:ultrared/features/actividades/presentation/provider/actividad_provider.dart';
+import 'package:ultrared/features/actividades/presentation/widgets/equipo_instalado_card.dart';
+import 'package:ultrared/features/actividades/presentation/widgets/show_dialog_equipo_instalado.dart';
 import 'package:ultrared/features/clientes/infrastructure/delegatesFunction/delegates.dart';
 import 'package:ultrared/features/shared/infrastructure/delegatesFunction/delegates.dart';
 import 'package:ultrared/features/shared/msg/show_snackbar.dart';
@@ -12,6 +14,7 @@ import 'package:ultrared/features/shared/utils/responsive.dart';
 import 'package:ultrared/features/shared/widgets/form/button_map.dart';
 import 'package:ultrared/features/shared/widgets/form/custom_date_picker_button.dart';
 import 'package:ultrared/features/shared/widgets/form/custom_expandable_email_list.dart';
+import 'package:ultrared/features/shared/widgets/form/custom_expandable_list_with_cards.dart';
 import 'package:ultrared/features/shared/widgets/form/custom_expandable_list_with_delegate.dart';
 import 'package:ultrared/features/shared/widgets/form/image_gallery.dart';
 import 'package:ultrared/features/shared/widgets/form/signature_field.dart';
@@ -205,7 +208,10 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
       if (res != null) {
         actividadNotifier.setSectores(res.ciuSectores);
         updateForm(
-            actividadForm: actividadFormCopyWith(actaCiudad: res.ciuNombre));
+            actividadForm: actividadFormCopyWith(
+          actaCiudad: res.ciuNombre,
+          actaSector: [],
+        ));
       }
     }
 
@@ -366,7 +372,7 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
                 ),
               ),
             ),
-            CustomExpandableListWithDelagate(
+            CustomExpandableListWithDelegate(
               label: 'Lugares',
               onDeleteValue: (p0) {
                 updateForm(
@@ -525,7 +531,7 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
             //   },
             //   icon: Icon(Icons.cloud_upload),
             // ),
-    CustomInputField(
+            CustomInputField(
               controller: ppoeController,
               label: 'PPPoE',
               onChanged: (p0) {
@@ -611,10 +617,59 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
               size: size,
             ),
             SignatureField(),
+            CustomExpandableListWithCards(
+              label: 'Equipos Instalados',
+              // errorMessage: '',
+              values: actividadState.actividadForm.actaEquiposInstalados,
+              onTap: () async {
+                final res = await showEquipoInstaladoDialog(
+                  context: context,
+                  size: size,
+                  editar: false,
+                );
+                if (res != null) {
+                  updateForm(
+                      actividadForm: actividadFormCopyWith(
+                          actaEquiposInstalados: [
+                        res,
+                        ...actividadState.actividadForm.actaEquiposInstalados
+                      ]));
+                }
+              },
+              children: actividadState.actividadForm.actaEquiposInstalados
+                  .map((value) {
+                return EquipoInstaladoCard(
+                  equipoInstalado: value,
+                  loadActividad: (actividadToActive) async {
+                    final res = await showEquipoInstaladoDialog(
+                        context: context,
+                        size: size,
+                        editar: true,
+                        equipoInstaladoToEdit: actividadToActive);
+                    if (res != null) {
+                      updateForm(
+                          actividadForm: actividadFormCopyWith(
+                              actaEquiposInstalados: actividadState
+                                  .actividadForm.actaEquiposInstalados
+                                  .map((e) => e.id == res.id ? res : e)
+                                  .toList()));
+                    }
+                  },
+                  onDelete: (actividadToDelete) async {
+                    updateForm(
+                        actividadForm: actividadFormCopyWith(
+                            actaEquiposInstalados: actividadState
+                                .actividadForm.actaEquiposInstalados
+                                .where((e) => e.id != actividadToDelete.id)
+                                .toList()));
+                  },
+                  size: size,
+                );
+              }).toList(),
+            ),
 
-        
             SizedBox(
-              height: 150,
+              height: 250,
             )
           ],
         ),

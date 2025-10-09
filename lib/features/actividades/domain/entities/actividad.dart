@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:ultrared/features/actividades/domain/entities/equipo_instalado.dart';
 import 'package:ultrared/features/actividades/domain/entities/ubicacion.dart';
 import 'package:ultrared/features/shared/domain/entities/imagen.dart';
 import 'package:ultrared/features/shared/helpers/get_date.dart';
@@ -23,7 +24,7 @@ class Actividad {
   String actaClienteRegulador;
   List<Imagen> actaFotos;
   Ubicacion actaUbicacion;
-  List<dynamic> actaEquiposInstalados;
+  List<EquipoInstalado> actaEquiposInstalados;
   List<dynamic> actaCargosAdicionales;
   String actaConfigRouter;
   String actaValorRouter;
@@ -185,7 +186,7 @@ class Actividad {
           .toList(),
       actaUbicacion: Ubicacion.fromJson(json["actaUbicacion"]),
       actaEquiposInstalados:
-          List<dynamic>.from(json["actaEquiposInstalados"].map((x) => x)),
+          List<EquipoInstalado>.from(json["actaEquiposInstalados"].map((x) => x)),
       actaCargosAdicionales:
           List<dynamic>.from(json["actaCargosAdicionales"].map((x) => x)),
       actaConfigRouter: json["actaConfigRouter"],
@@ -241,7 +242,7 @@ class Actividad {
     String? actaClienteRegulador,
     List<Imagen>? actaFotos,
     Ubicacion? actaUbicacion,
-    List<dynamic>? actaEquiposInstalados,
+    List<EquipoInstalado>? actaEquiposInstalados,
     List<dynamic>? actaCargosAdicionales,
     String? actaConfigRouter,
     String? actaValorRouter,
