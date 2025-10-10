@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ultrared/main.dart';
 
 class AppTheme {
   final String primary;
@@ -89,8 +90,8 @@ class AppTheme {
       ///* FloatingActionButton
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         elevation: 4, // Elevación del FAB
-        backgroundColor: colorScheme.secondary,
-        // foregroundColor: colorScheme.onSecondary,
+        backgroundColor: colorScheme.primary,
+        foregroundColor: colorScheme.primary.contrastText,
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:ultrared/features/actividades/domain/entities/cargo.dart';
 import 'package:ultrared/features/actividades/domain/entities/equipo_instalado.dart';
 import 'package:ultrared/features/actividades/domain/entities/ubicacion.dart';
 import 'package:ultrared/features/shared/domain/entities/imagen.dart';
@@ -25,7 +26,7 @@ class Actividad {
   List<Imagen> actaFotos;
   Ubicacion actaUbicacion;
   List<EquipoInstalado> actaEquiposInstalados;
-  List<dynamic> actaCargosAdicionales;
+  List<Cargo> actaCargosAdicionales;
   String actaConfigRouter;
   String actaValorRouter;
   String actaCambioPatch;
@@ -188,7 +189,7 @@ class Actividad {
       actaEquiposInstalados:
           List<EquipoInstalado>.from(json["actaEquiposInstalados"].map((x) => x)),
       actaCargosAdicionales:
-          List<dynamic>.from(json["actaCargosAdicionales"].map((x) => x)),
+          List<Cargo>.from(json["actaCargosAdicionales"].map((x) => x)),
       actaConfigRouter: json["actaConfigRouter"],
       actaValorRouter: json["actaValorRouter"],
       actaCambioPatch: json["actaCambioPatch"],
@@ -243,7 +244,7 @@ class Actividad {
     List<Imagen>? actaFotos,
     Ubicacion? actaUbicacion,
     List<EquipoInstalado>? actaEquiposInstalados,
-    List<dynamic>? actaCargosAdicionales,
+    List<Cargo>? actaCargosAdicionales,
     String? actaConfigRouter,
     String? actaValorRouter,
     String? actaCambioPatch,
@@ -350,7 +351,7 @@ class Actividad {
         "actaEquiposInstalados":
             List<dynamic>.from(actaEquiposInstalados.map((x) => x)),
         "actaCargosAdicionales":
-            List<dynamic>.from(actaCargosAdicionales.map((x) => x)),
+            List<Cargo>.from(actaCargosAdicionales.map((x) => x)),
         "actaConfigRouter": actaConfigRouter,
         "actaValorRouter": actaValorRouter,
         "actaCambioPatch": actaCambioPatch,

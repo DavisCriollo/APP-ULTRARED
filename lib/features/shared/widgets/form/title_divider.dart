@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ultrared/main.dart';
 
 class TitleDivider extends StatelessWidget {
   final String title;
@@ -14,6 +15,7 @@ class TitleDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Row(
       children: [
         if (action != null)
@@ -21,7 +23,7 @@ class TitleDivider extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Text(
               title,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: fontSize),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: fontSize, color: colors.secondary.lighten(0.2)),
             ),
           ),
         const Expanded(
@@ -32,7 +34,7 @@ class TitleDivider extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Text(
               title,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: fontSize),
+                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: fontSize, color: colors.secondary.lighten(0.25)),
             ),
           ),
         const Expanded(

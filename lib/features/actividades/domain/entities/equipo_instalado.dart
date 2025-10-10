@@ -6,8 +6,8 @@ class ValidacionEquipoInstalado {
   String? cantidad;
   bool isValid;
   ValidacionEquipoInstalado({
-    this.material ,
-    this.cantidad ,
+    this.material,
+    this.cantidad,
     this.isValid = true,
   });
   ValidacionEquipoInstalado copyWith({
@@ -58,16 +58,6 @@ class EquipoInstalado {
     );
   }
 
-  factory EquipoInstalado.fromJson(Map<String, dynamic> json) =>
-      EquipoInstalado(
-        id: json["id"],
-        cantidad: Parse.parseDynamicToInt(json["cantidad"]),
-        material: json["material"],
-        marca: json["marca"],
-        serie: json["serie"],
-        observaciones: json["observaciones"],
-      );
-
   EquipoInstalado copyWith({
     String? id,
     int? cantidad,
@@ -84,7 +74,15 @@ class EquipoInstalado {
         serie: serie ?? this.serie,
         observaciones: observaciones ?? this.observaciones,
       );
-
+  factory EquipoInstalado.fromJson(Map<String, dynamic> json) =>
+      EquipoInstalado(
+        id: json["id"],
+        cantidad: Parse.parseDynamicToInt(json["cantidad"]),
+        material: json["material"],
+        marca: json["marca"],
+        serie: json["serie"],
+        observaciones: json["observaciones"],
+      );
   Map<String, dynamic> toJson() => {
         "id": id,
         "cantidad": cantidad,

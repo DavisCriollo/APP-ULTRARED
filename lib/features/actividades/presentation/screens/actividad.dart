@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ultrared/features/actividades/domain/entities/actividad.dart';
 import 'package:ultrared/features/actividades/presentation/provider/actividad_provider.dart';
+import 'package:ultrared/features/actividades/presentation/widgets/cargo_card.dart';
 import 'package:ultrared/features/actividades/presentation/widgets/equipo_instalado_card.dart';
+import 'package:ultrared/features/actividades/presentation/widgets/show_dialog_cargo.dart';
 import 'package:ultrared/features/actividades/presentation/widgets/show_dialog_equipo_instalado.dart';
 import 'package:ultrared/features/clientes/infrastructure/delegatesFunction/delegates.dart';
 import 'package:ultrared/features/shared/infrastructure/delegatesFunction/delegates.dart';
@@ -15,9 +17,10 @@ import 'package:ultrared/features/shared/widgets/form/button_map.dart';
 import 'package:ultrared/features/shared/widgets/form/custom_date_picker_button.dart';
 import 'package:ultrared/features/shared/widgets/form/custom_expandable_email_list.dart';
 import 'package:ultrared/features/shared/widgets/form/custom_expandable_list_with_cards.dart';
-import 'package:ultrared/features/shared/widgets/form/custom_expandable_list_with_delegate.dart';
+import 'package:ultrared/features/shared/widgets/form/custom_expandable_list_with_delegate.dart'; 
 import 'package:ultrared/features/shared/widgets/form/image_gallery.dart';
 import 'package:ultrared/features/shared/widgets/form/signature_field.dart';
+import 'package:ultrared/features/shared/widgets/form/title_divider.dart';
 
 class ActividadScreen extends ConsumerWidget {
   const ActividadScreen({
@@ -309,6 +312,7 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
       child: SingleChildScrollView(
         child: Column(
           children: [
+            const TitleDivider(title: 'Cliente'),
             CustomInputField(
               onTap: setClienteDelegate,
               readOnly: true,
@@ -357,6 +361,7 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
               label: 'Tel Cliente',
               onChanged: (p0) {},
             ),
+            const TitleDivider(title: 'Ubicación'),
             CustomInputField(
               onTap: setCiudadDelegate,
               readOnly: true,
@@ -392,6 +397,7 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
                 );
               },
             ),
+            const TitleDivider(title: 'Servicio'),
             CustomSelectField(
               bold: false,
               errorMessage: '',
@@ -531,6 +537,7 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
             //   },
             //   icon: Icon(Icons.cloud_upload),
             // ),
+            const TitleDivider(title: 'Conexión'),
             CustomInputField(
               controller: ppoeController,
               label: 'PPPoE',
@@ -575,7 +582,7 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
                             .toList()));
               },
             ),
-
+            const TitleDivider(title: 'Detalles'),
             CustomRadioBotton(
               selectedValue: actividadState.actividadForm.actaClienteRegulador,
               onChanged: (p0) {
@@ -605,6 +612,7 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
               questionText: 'CAMBIO DE PATCH CORD FIBRA: ',
               size: size,
             ),
+            const TitleDivider(title: 'Firma Del Cliente'),
             CustomRadioBotton(
               selectedValue:
                   actividadState.actividadForm.actaSeEncuentraCliente,
@@ -667,9 +675,59 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
                 );
               }).toList(),
             ),
+            CustomExpandableListWithCards(
+              label: 'Cargos',
+              // errorMessage: '',
+              values: actividadState.actividadForm.actaCargosAdicionales,
+              onTap: () async {
+                final res = await showCargoDialog(
+                  context: context,
+                  size: size,
+                  editar: false,
+                );
+                if (res != null) {
+                  updateForm(
+                      actividadForm: actividadFormCopyWith(
+                          actaCargosAdicionales: [
+                        res,
+                        ...actividadState.actividadForm.actaCargosAdicionales
+                      ]));
+                }
+              },
+              children: actividadState.actividadForm.actaCargosAdicionales
+                  .map((value) {
+                return CargoCard(
+                  equipoInstalado: value,
+                  loadActividad: (actividadToActive) async {
+                    final res = await showCargoDialog(
+                        context: context,
+                        size: size,
+                        editar: true,
+                        equipoInstaladoToEdit: actividadToActive);
+                    if (res != null) {
+                      updateForm(
+                          actividadForm: actividadFormCopyWith(
+                              actaCargosAdicionales: actividadState
+                                  .actividadForm.actaCargosAdicionales
+                                  .map((e) => e.id == res.id ? res : e)
+                                  .toList()));
+                    }
+                  },
+                  onDelete: (actividadToDelete) async {
+                    updateForm(
+                        actividadForm: actividadFormCopyWith(
+                            actaCargosAdicionales: actividadState
+                                .actividadForm.actaCargosAdicionales
+                                .where((e) => e.id != actividadToDelete.id)
+                                .toList()));
+                  },
+                  size: size,
+                );
+              }).toList(),
+            ),
 
             SizedBox(
-              height: 250,
+              height: 150,
             )
           ],
         ),
