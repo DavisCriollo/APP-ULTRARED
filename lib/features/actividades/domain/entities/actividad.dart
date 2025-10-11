@@ -4,8 +4,78 @@ import 'package:ultrared/features/actividades/domain/entities/cargo.dart';
 import 'package:ultrared/features/actividades/domain/entities/equipo_instalado.dart';
 import 'package:ultrared/features/actividades/domain/entities/ubicacion.dart';
 import 'package:ultrared/features/shared/domain/entities/imagen.dart';
+import 'package:ultrared/features/shared/errors/error_validacion.dart';
 import 'package:ultrared/features/shared/helpers/get_date.dart';
 import 'package:ultrared/features/shared/helpers/parse.dart';
+
+class ValidacionActividad {
+  String? actaDocCliente;
+  String? actaCiudad;
+  String? actaSector;
+  String? actaFechaInstalacion;
+  String? actaDocVendedor;
+  String? planNombreInternet;
+  bool isValid;
+
+  ValidacionActividad({
+    this.actaDocCliente,
+    this.actaCiudad,
+    this.actaSector,
+    this.actaFechaInstalacion,
+    this.actaDocVendedor,
+    this.planNombreInternet,
+    this.isValid = true,
+  });
+
+  ValidacionActividad copyWith({
+    String? actaDocCliente,
+    String? actaCiudad,
+    String? actaSector,
+    String? actaFechaInstalacion,
+    String? actaDocVendedor,
+    String? planNombreInternet,
+    bool? isValid,
+  }) {
+    return ValidacionActividad(
+      actaDocCliente: actaDocCliente ?? this.actaDocCliente,
+      actaCiudad: actaCiudad ?? this.actaCiudad,
+      actaSector: actaSector ?? this.actaSector,
+      actaFechaInstalacion: actaFechaInstalacion ?? this.actaFechaInstalacion,
+      actaDocVendedor: actaDocVendedor ?? this.actaDocVendedor,
+      planNombreInternet: planNombreInternet ?? this.planNombreInternet,
+      isValid: isValid ?? this.isValid,
+    );
+  }
+
+  ValidacionActividad validar(Actividad actividad) {
+    actaDocCliente = Validacion.campoRequerido(actividad.actaDocCliente);
+    actaCiudad = Validacion.campoRequerido(actividad.actaCiudad);
+    actaSector = Validacion.listaRequerida(actividad.actaSector);
+    final esNuevaInstalacion = actividad.actaOpcion == "Nueva Instalación";
+
+    if (esNuevaInstalacion) {
+      actaFechaInstalacion =
+          Validacion.campoRequerido(actividad.actaFechaInstalacion);
+      actaDocVendedor = Validacion.campoRequerido(actividad.actaDocVendedor);
+      planNombreInternet =
+          Validacion.campoRequerido(actividad.planNombreInternet);
+    } else {
+      actaFechaInstalacion = null;
+      actaDocVendedor = null;
+      planNombreInternet = null;
+    }
+
+    isValid = ![
+      actaCiudad,
+      actaSector,
+      actaFechaInstalacion,
+      actaDocVendedor,
+      planNombreInternet,
+    ].any((error) => error != null);
+
+    return copyWith();
+  }
+}
 
 class Actividad {
   int actaId;
@@ -164,6 +234,7 @@ class Actividad {
   }
 
   factory Actividad.fromJson(Map<String, dynamic> json) {
+    print(json['actaEquiposInstalados']);
     return Actividad(
       actaId: json["actaId"],
       actaIdCliente: json["actaIdCliente"],
@@ -186,10 +257,11 @@ class Actividad {
           .where((x) => x.url.isNotEmpty)
           .toList(),
       actaUbicacion: Ubicacion.fromJson(json["actaUbicacion"]),
-      actaEquiposInstalados:
-          List<EquipoInstalado>.from(json["actaEquiposInstalados"].map((x) => x)),
-      actaCargosAdicionales:
-          List<Cargo>.from(json["actaCargosAdicionales"].map((x) => x)),
+      actaEquiposInstalados: List<EquipoInstalado>.from(
+          json["actaEquiposInstalados"]
+              .map((x) => EquipoInstalado.fromJson(x))),
+      actaCargosAdicionales: List<Cargo>.from(
+          json["actaCargosAdicionales"].map((x) => Cargo.fromJson(x))),
       actaConfigRouter: json["actaConfigRouter"],
       actaValorRouter: json["actaValorRouter"],
       actaCambioPatch: json["actaCambioPatch"],
@@ -212,8 +284,8 @@ class Actividad {
       actaTelCliente: List<String>.from(json["actaTelCliente"].map((x) => x)),
       actaEmailCliente:
           List<String>.from(json["actaEmailCliente"].map((x) => x)),
-      actaEntDoc: json["actaEntDoc"],
-      actaEntNombre: json["actaEntNombre"],
+      actaEntDoc: json["actaEntDoc"] ?? '',
+      actaEntNombre: json["actaEntNombre"] ?? '',
       actaDocVendedor: json["actaDocVendedor"] ?? '',
       actaNombreVendedor: json["actaNombreVendedor"] ?? '',
       planNombreInternet:
@@ -351,7 +423,7 @@ class Actividad {
         "actaEquiposInstalados":
             List<dynamic>.from(actaEquiposInstalados.map((x) => x)),
         "actaCargosAdicionales":
-            List<Cargo>.from(actaCargosAdicionales.map((x) => x)),
+            List<dynamic>.from(actaCargosAdicionales.map((x) => x)),
         "actaConfigRouter": actaConfigRouter,
         "actaValorRouter": actaValorRouter,
         "actaCambioPatch": actaCambioPatch,

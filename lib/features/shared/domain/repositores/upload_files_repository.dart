@@ -33,11 +33,13 @@ class UploadFilesRepository {
     required String tipo,
     required List<String> urlToDelete,
   }) async {
+    final imagenesToUpload =
+        imagenes.where((img) => !img.url.startsWith('http')).toList();
+    final imagenesUploaded =
+        imagenes.where((img) => img.url.startsWith('http')).toList();
     try {
-      final imagenesToUpload =
-          imagenes.where((img) => !img.url.startsWith('http')).toList();
       if (imagenesToUpload.isEmpty && urlToDelete.isEmpty) {
-        return ResponseUploadFiles(resultado: [], error: '');
+        return ResponseUploadFiles(resultado: imagenesUploaded, error: '');
       }
       final formData = FormData.fromMap({
         "tipo": tipo,
@@ -78,12 +80,15 @@ class UploadFilesRepository {
         }
       }
 
-      return ResponseUploadFiles(resultado: resultado, error: '');
+      return ResponseUploadFiles(
+          resultado: [...resultado, ...imagenesUploaded], error: '');
     } on DioException catch (e) {
       return ResponseUploadFiles(
-          resultado: [], error: ErrorApi.getErrorMessage(e, 'uploadFiles'));
+          resultado: imagenesUploaded,
+          error: ErrorApi.getErrorMessage(e, 'uploadFiles'));
     } catch (e) {
-      return ResponseUploadFiles(resultado: [], error: e.toString());
+      return ResponseUploadFiles(
+          resultado: imagenesUploaded, error: e.toString());
     }
   }
 

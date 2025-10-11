@@ -1,6 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ultrared/features/actividades/domain/entities/actividad.dart';
 import 'package:ultrared/features/actividades/presentation/provider/actividad_provider.dart';
 import 'package:ultrared/features/actividades/presentation/widgets/cargo_card.dart';
@@ -17,7 +18,7 @@ import 'package:ultrared/features/shared/widgets/form/button_map.dart';
 import 'package:ultrared/features/shared/widgets/form/custom_date_picker_button.dart';
 import 'package:ultrared/features/shared/widgets/form/custom_expandable_email_list.dart';
 import 'package:ultrared/features/shared/widgets/form/custom_expandable_list_with_cards.dart';
-import 'package:ultrared/features/shared/widgets/form/custom_expandable_list_with_delegate.dart'; 
+import 'package:ultrared/features/shared/widgets/form/custom_expandable_list_with_delegate.dart';
 import 'package:ultrared/features/shared/widgets/form/image_gallery.dart';
 import 'package:ultrared/features/shared/widgets/form/signature_field.dart';
 import 'package:ultrared/features/shared/widgets/form/title_divider.dart';
@@ -98,20 +99,19 @@ class _FloatingButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final actividadState = ref.watch(actividadFormProvider);
+    final actividadNotifier = ref.watch(actividadFormProvider.notifier);
     return FloatingActionButton(
       onPressed: () async {
-        // if (actividadState.isPosting) {
-        //   return;
-        // }
-        // final exitoso = await actividadNotifier.onFormSubmit();
+        if (actividadState.formStatus.isPosting) {
+          return;
+        }
+        final exitoso = await actividadNotifier.onFormSubmit();
 
-        // if (exitoso && context.mounted) {
-        //   context.pop();
-        //   NotificationsService.show(
-        //       context,
-        //       actividadState.actividadForm.ccFactura,
-        //       SnackbarCategory.success);
-        // }
+        if (exitoso && context.mounted) {
+          context.pop();
+          NotificationsService.show(
+              context, 'Actividad Creada', SnackbarCategory.success);
+        }
       },
       child: actividadState.formStatus.isPosting
           ? SpinPerfect(
@@ -312,8 +312,20 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
       child: SingleChildScrollView(
         child: Column(
           children: [
+            // DatoForm(label:'DocCliente', value:  actividadState.validacionActividad.actaDocCliente ?? ''),
+            // DatoForm(label:'Ciudad', value:  actividadState.validacionActividad.actaCiudad ?? ''),
+            // DatoForm(label:'Sector', value:  actividadState.validacionActividad.actaSector ?? ''),
+            // DatoForm(label:'Fecha Instalación', value:  actividadState.validacionActividad.actaFechaInstalacion ?? ''),
+            // DatoForm(label:'Doc Vendedor', value:  actividadState.validacionActividad.actaDocVendedor ?? ''),
             const TitleDivider(title: 'Cliente'),
+            // this.actaDocCliente,
+            // this.actaCiudad,
+            // this.actaSector,
+            // this.actaFechaInstalacion,
+            // this.actaDocVendedor,
+            // this.planNombreInternet,
             CustomInputField(
+              errorMessage: actividadState.validacionActividad.actaDocCliente,
               onTap: setClienteDelegate,
               readOnly: true,
               controller: TextEditingController(
@@ -363,6 +375,7 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
             ),
             const TitleDivider(title: 'Ubicación'),
             CustomInputField(
+              errorMessage: actividadState.validacionActividad.actaCiudad,
               onTap: setCiudadDelegate,
               readOnly: true,
               controller: TextEditingController(
@@ -378,6 +391,7 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
               ),
             ),
             CustomExpandableListWithDelegate(
+              errorMessage: actividadState.validacionActividad.actaSector,
               label: 'Lugares',
               onDeleteValue: (p0) {
                 updateForm(
@@ -437,16 +451,21 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
             ),
             if (actividadState.actividadForm.actaOpcion == "Nueva Instalación")
               CustomDatePickerButton(
-                  getDate: (value) {
-                    updateForm(
-                      actividadForm:
-                          actividadFormCopyWith(actaFechaInstalacion: value),
-                    );
-                  },
-                  label: 'Fecha Instalación',
-                  value: actividadState.actividadForm.actaFechaInstalacion),
+                errorMessage:
+                    actividadState.validacionActividad.actaFechaInstalacion,
+                getDate: (value) {
+                  updateForm(
+                    actividadForm:
+                        actividadFormCopyWith(actaFechaInstalacion: value),
+                  );
+                },
+                label: 'Fecha Instalación',
+                value: actividadState.actividadForm.actaFechaInstalacion,
+              ),
             if (actividadState.actividadForm.actaOpcion == "Nueva Instalación")
               CustomInputField(
+                errorMessage:
+                    actividadState.validacionActividad.actaDocVendedor,
                 onTap: setVendedorDelegate,
                 readOnly: true,
                 controller: TextEditingController(
@@ -465,6 +484,8 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
               ),
             if (actividadState.actividadForm.actaOpcion == "Nueva Instalación")
               CustomInputField(
+                errorMessage:
+                    actividadState.validacionActividad.planNombreInternet,
                 onTap: setPlanDelegate,
                 readOnly: true,
                 controller: TextEditingController(
@@ -624,7 +645,14 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
               questionText: 'SE ENCUENTRA CLIENTE:',
               size: size,
             ),
-            SignatureField(),
+            SignatureField(
+                initialImageBase64: actividadState.actividadForm.actaEntFirma,
+                onClear: () => updateForm(
+                    actividadForm: actividadFormCopyWith(actaEntFirma: '')),
+                onSave: (base64) => updateForm(
+                      actividadForm:
+                          actividadFormCopyWith(actaEntFirma: base64),
+                    )),
             CustomExpandableListWithCards(
               label: 'Equipos Instalados',
               // errorMessage: '',

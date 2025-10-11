@@ -87,7 +87,7 @@ Future<Cargo?> showCargoDialog({
             actions: [
               TextButton(
                 onPressed: () {
-                  final isInvalid = validacion.validacionHijo(equipoInstalado);
+                  final isInvalid = validacion.validar(equipoInstalado);
                   if (isInvalid) {
                     setState(() {}); // muestra errores
                     return;

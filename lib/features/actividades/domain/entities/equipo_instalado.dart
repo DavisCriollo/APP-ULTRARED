@@ -1,3 +1,4 @@
+import 'package:ultrared/features/shared/errors/error_validacion.dart';
 import 'package:ultrared/features/shared/helpers/parse.dart';
 import 'package:uuid/uuid.dart';
 
@@ -22,12 +23,16 @@ class ValidacionEquipoInstalado {
     );
   }
 
-  bool validacionHijo(EquipoInstalado itemHijo) {
-    final noEsValido = itemHijo.material.trim() == "" || itemHijo.cantidad <= 0;
-    isValid = !noEsValido;
-    material = itemHijo.material.trim() == "" ? 'Campo requerido' : null;
-    cantidad = itemHijo.cantidad <= 0 ? 'Debe ser mayor a 0' : null;
-    return noEsValido;
+  bool validar(EquipoInstalado itemHijo) {
+    material = Validacion.campoRequerido(itemHijo.material);
+    cantidad = itemHijo.cantidad <= 0 ? Validacion.numMin(valor: 0) : null;
+
+    isValid = [
+      material,
+      cantidad,
+    ].every((error) => error == null);
+
+    return !isValid;
   }
 }
 

@@ -1,3 +1,4 @@
+import 'package:ultrared/features/shared/errors/error_validacion.dart';
 import 'package:ultrared/features/shared/helpers/parse.dart';
 import 'package:uuid/uuid.dart';
 
@@ -32,20 +33,21 @@ class ValidacionCargo {
     );
   }
 
-  bool validacionHijo(Cargo itemHijo) {
-    final noEsValido = itemHijo.item.trim() == "" ||
-        itemHijo.costoUnitario == 0 ||
-        itemHijo.cantidad == 0 ||
-        itemHijo.valor == 0;
+  bool validar(Cargo itemHijo) {
+    item = Validacion.campoRequerido(itemHijo.item);
+    costoUnitario =
+        itemHijo.costoUnitario <= 0 ? Validacion.numMin(valor: 0) : null;
+    cantidad = itemHijo.cantidad <= 0 ? Validacion.numMin(valor: 0) : null;
+    valor = itemHijo.valor <= 0 ? Validacion.numMin(valor: 0) : null;
 
-    isValid = !noEsValido;
+    isValid = [
+      item,
+      costoUnitario,
+      cantidad,
+      valor,
+    ].every((error) => error == null);
 
-    item = itemHijo.item.trim() == "" ? 'Campo requerido' : null;
-    costoUnitario = itemHijo.costoUnitario == 0 ? 'Debe ser mayor a 0' : null;
-    cantidad = itemHijo.cantidad == 0 ? 'Debe ser mayor a 0' : null;
-    valor = itemHijo.valor == 0 ? 'Debe ser mayor a 0' : null;
-
-    return noEsValido;
+    return !isValid;
   }
 }
 

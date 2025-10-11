@@ -3,47 +3,48 @@ import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:ultrared/features/actividades/domain/entities/actividad.dart';
 import 'package:ultrared/features/actividades/domain/entities/ubicacion.dart';
 import 'package:ultrared/features/actividades/presentation/provider/actividades_provider.dart';
+import 'package:ultrared/features/auth/domain/domain.dart';
 import 'package:ultrared/features/auth/presentation/providers/auth_provider.dart';
-import 'package:ultrared/features/shared/domain/entities/ciudad.dart'; 
+import 'package:ultrared/features/shared/domain/entities/ciudad.dart';
+import 'package:ultrared/features/shared/domain/repositores/upload_files_repository.dart';
 import 'package:ultrared/features/shared/infrastructure/form/form_status.dart';
 import 'package:ultrared/features/shared/provider/socket.dart';
+import 'package:ultrared/features/shared/provider/upload_delete_files_provider.dart';
 
 final actividadFormProvider = StateNotifierProvider.autoDispose<
     ActividadFormNotifier, ActividadFormState>((ref) {
   final actividadesProviderNotifier = ref.read(actividadesProvider.notifier);
-  final user = ref.read(authProvider).user!;
-  final rol = user.rol;
-  final rucempresa = user.rucempresa;
-  final usuario = user.usuario;
+  final usuario = ref.read(authProvider).user!;
+
   final socket = ref.watch(socketProvider);
+  final UploadFilesRepository uploadFilesRepository =
+      ref.read(uploadDeleteFilesProvider);
   return ActividadFormNotifier(
     socket: socket,
     createUpdateActividad: actividadesProviderNotifier.createUpdateActividad,
     getActividadById: actividadesProviderNotifier.getActividadById,
-    rol: rol,
-    rucempresa: rucempresa,
     usuario: usuario,
+    uploadFilesRepository: uploadFilesRepository,
   );
 });
 
 class ActividadFormNotifier extends StateNotifier<ActividadFormState> {
   final Future<void> Function(Map<String, dynamic>, bool) createUpdateActividad;
-  final List<String> rol;
-  final String rucempresa;
-  final String usuario;
+  final User usuario;
+
   final io.Socket socket;
   final Future<GetActividadResponse> Function(int venId) getActividadById;
-
+  final UploadFilesRepository uploadFilesRepository;
   ActividadFormNotifier({
     required this.getActividadById,
     required this.createUpdateActividad,
-    required this.socket,
-    required this.rol,
-    required this.rucempresa,
     required this.usuario,
+    required this.socket,
+    required this.uploadFilesRepository,
   }) : super(ActividadFormState(
           actividadForm: Actividad.defaultActividad(),
           actividadActive: Actividad.defaultActividad(),
+          validacionActividad: ValidacionActividad(),
           formStatus: Formstatus(),
           // ccIdParam: ccIdParam,
 
@@ -86,49 +87,23 @@ class ActividadFormNotifier extends StateNotifier<ActividadFormState> {
   }
 
   void addimagenestoDelete(String url) {
-    state =
-        state.copyWith(imagenestoDelete: [...state.imagenestoDelete, url]);
+    state = state.copyWith(imagenestoDelete: [...state.imagenestoDelete, url]);
   }
 
-  void _touchedEverything(bool submit) {
-    if (submit) {
-      state = state.copyWith(
-        formStatus: state.formStatus.copyWith(
-          isPosted: true,
-          // TODO: VALIDAR SI ES VALIDO
-          isFormValid: false,
-        ),
-        // actividadForm: state.actividadForm.copyWith(
-        //     // venRucCliente: state.actividadForm.venRucCliente,
-        //     ),
-      );
-    }
-  }
-
-  Future<bool> onFormSubmitPago(bool enviarCorreo) async {
+  Future<bool> onFormSubmit() async {
     // Marcar todos los campos como tocados
-    _touchedEverything(true);
+    final validacion = state.validacionActividad.validar(state.actividadForm);
+    if (!validacion.isValid) {
+      state = state.copyWith(
+        validacionActividad: validacion,
+      );
 
-    // Esperar un breve momento para asegurar que el estado se actualice
-
-    // Verificar si el formulario es válido y si ya se está posteando
-    if (!state.formStatus.isFormValid) {
       return false;
     }
     if (state.formStatus.isPosting) {
       return false;
     }
-    // if (!(["EFECTIVO", "CRUCE COMPRA", "DONACION"]
-    //         .contains(state.pagoForm.ccTipo)) &&
-    //     state.pagoForm.ccComprobante.isEmpty) {
-    //   state = state.copyWith(
-    //     error: "El tipo de pago seleccionado requiere un comprobante.",
-    //   );
-    //   _resetError();
-    //   return false;
-    // }
 
-    // Actualizar el estado para indicar que se está posteando
     state = state.copyWith(
       formStatus: state.formStatus.copyWith(
         isPosting: true,
@@ -136,26 +111,37 @@ class ActividadFormNotifier extends StateNotifier<ActividadFormState> {
     );
 
     try {
-      // state = state.copyWith(
-      //   actividadForm: state.actividadForm.copyWith(
-      //     ccPagos: [
-      //       state.pagoForm
-      //           .copyWith(uuid: const Uuid().v4(), ccUsuario: usuario),
-      //       ...state.actividadForm.ccPagos,
-      //     ],
-      //   ),
-      // );
+      final resDocumentos = await uploadFilesRepository.uploadFiles(
+          imagenes: state.actividadForm.actaFotos,
+          tipo: 'documento',
+          urlToDelete: state.imagenestoDelete);
+      if (resDocumentos.error.isNotEmpty) {
+        state = state.copyWith(
+          error: resDocumentos.error,
+          formStatus: state.formStatus.copyWith(
+            isPosting: true,
+          ),
+        );
+      }
       final actividadMap = {
-        // ...state.actividadForm.toActividad().toJson(),
-        "rucempresa": rucempresa,
-        "enviarCorreo": enviarCorreo,
-        "rol": rol,
-        "venUser": usuario,
-        "venEmpresa": rucempresa,
-        "tabla": "cuentasporcobrar",
-      };
+        ...state.actividadForm
+            .copyWith(
+              actaFotos: resDocumentos.resultado,
+              actaEntDoc: usuario.codigo,
+              actaEntNombre: usuario.nombre,
+              
+            )
+            .toJson(),
+        "rucempresa": usuario.rucempresa,
+        "rol": usuario.rol,
+        "actaUser": usuario.usuario,
+        "actaEmpresa": usuario.rucempresa,
+        "tabla": "acta_entrega_recepcion",
 
-      // print(actividadMap);
+        // actaFotos: resDocumentos,
+        // nombres_tecnicos: tecnicos.join(", "),
+      };
+ 
       createUpdateActividad(actividadMap, state.actividadForm.actaId != 0);
       // Actualizar el estado para indicar que ya no se está posteando
       state = state.copyWith(
@@ -197,6 +183,7 @@ class ActividadFormState {
 //* VENTA-FORM
   final Actividad actividadActive;
   final Actividad actividadForm;
+  final ValidacionActividad validacionActividad;
   final Formstatus formStatus;
   final Ubicacion? ubicacionObtenida;
   //*params
@@ -209,6 +196,7 @@ class ActividadFormState {
     //* VENTA-FORM
     required this.actividadActive,
     required this.actividadForm,
+    required this.validacionActividad,
     required this.formStatus,
     this.ubicacionObtenida,
     //*params
@@ -223,6 +211,7 @@ class ActividadFormState {
     Actividad? actividadActive,
     Actividad? actividadForm,
     Formstatus? formStatus,
+    ValidacionActividad? validacionActividad,
     Ubicacion? ubicacionObtenida,
     //*params
     List<CiuSector>? sectoresData,
@@ -237,6 +226,7 @@ class ActividadFormState {
       actividadActive: actividadActive ?? this.actividadActive,
       actividadForm: actividadForm ?? this.actividadForm,
       formStatus: formStatus ?? this.formStatus,
+      validacionActividad: validacionActividad ?? this.validacionActividad,
       ubicacionObtenida: ubicacionObtenida ?? this.ubicacionObtenida,
       //*params
       sectoresData: sectoresData ?? this.sectoresData,

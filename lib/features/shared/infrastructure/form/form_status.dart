@@ -1,10 +1,8 @@
-class Formstatus {
-  final bool isFormValid;
+class Formstatus { 
   final bool isPosted;
   final bool isPosting;
 
-  Formstatus({
-    this.isFormValid = false,
+  Formstatus({ 
     this.isPosted = false,
     this.isPosting = false,
   });
@@ -14,8 +12,7 @@ class Formstatus {
     bool? isPosted,
     bool? isPosting,
   }) {
-    return Formstatus(
-      isFormValid: isFormValid ?? this.isFormValid,
+    return Formstatus( 
       isPosted: isPosted ?? this.isPosted,
       isPosting: isPosting ?? this.isPosting,
     );

@@ -254,7 +254,7 @@ class ActividadesNotifier extends StateNotifier<ActividadesState> {
   void _onActualizadoExitoso(dynamic data) {
     try {
       if (mounted) {
-        if (data['tabla'] == 'cuentasporcobrar' &&
+        if (data['tabla'] == 'acta_entrega_recepcion' &&
             data['rucempresa'] == user.rucempresa) {
           // Edita de la lista de actividades
           final updatedActividad = Actividad.fromJson(data);
@@ -272,7 +272,7 @@ class ActividadesNotifier extends StateNotifier<ActividadesState> {
   void _onGuardadoExitoso(dynamic data) async {
     try {
       if (mounted) {
-        if (data['tabla'] == 'cuentasporcobrar' &&
+        if (data['tabla'] == 'acta_entrega_recepcion' &&
             data['rucempresa'] == user.rucempresa) {
           // Agrega a la lista de actividades
           final newActividad = Actividad.fromJson(data);
