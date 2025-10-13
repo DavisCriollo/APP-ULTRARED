@@ -19,9 +19,12 @@ import 'package:ultrared/features/shared/widgets/form/custom_date_picker_button.
 import 'package:ultrared/features/shared/widgets/form/custom_expandable_email_list.dart';
 import 'package:ultrared/features/shared/widgets/form/custom_expandable_list_with_cards.dart';
 import 'package:ultrared/features/shared/widgets/form/custom_expandable_list_with_delegate.dart';
+import 'package:ultrared/features/shared/widgets/form/custom_expandable_phone_list.dart';
+import 'package:ultrared/features/shared/widgets/form/custom_expansion_tile.dart';
 import 'package:ultrared/features/shared/widgets/form/image_gallery.dart';
 import 'package:ultrared/features/shared/widgets/form/signature_field.dart';
 import 'package:ultrared/features/shared/widgets/form/title_divider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ActividadScreen extends ConsumerWidget {
   const ActividadScreen({
@@ -366,13 +369,29 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
               },
               values: actividadState.actividadForm.actaEmailCliente,
             ),
-            CustomInputField(
-              readOnly: true,
-              controller: TextEditingController(
-                  text: actividadState.actividadForm.actaTelCliente.join(', ')),
+            // CustomExpandablePhoneList(
+            //   label: 'Tel Cliente',
+            //   onAddValue: (p0) {},
+            //   onDeleteValue: (p0) {},
+            //   values: actividadState.actividadForm.actaTelCliente,
+            // ),
+
+            CustomExpandableListWithDelegate(
               label: 'Tel Cliente',
-              onChanged: (p0) {},
+              tel: true,
+              onDeleteValue: (p0) async {
+                final Uri whatsappUrl = Uri.parse("https://wa.me/50376681782");
+
+                if (await canLaunchUrl(whatsappUrl)) {
+                  await launchUrl(whatsappUrl,
+                      mode: LaunchMode.externalApplication);
+                } else {
+                  print("No se puede abrir WhatsApp");
+                }
+              },
+              values: actividadState.actividadForm.actaTelCliente,
             ),
+
             const TitleDivider(title: 'Ubicación'),
             CustomInputField(
               errorMessage: actividadState.validacionActividad.actaCiudad,

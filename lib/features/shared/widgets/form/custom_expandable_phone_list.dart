@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:ultrared/features/shared/msg/show_snackbar.dart';
 import 'package:ultrared/features/shared/widgets/form/custom_expansion_tile.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CustomExpandablePhoneList extends StatefulWidget {
   final String label;
@@ -106,24 +108,41 @@ class CustomExpandablePhoneListState extends State<CustomExpandablePhoneList> {
                 spacing: 1.0, // Espacio horizontal entre elementos
                 runSpacing: 1.0, // Espacio vertical entre líneas de elementos
                 children: widget.values.map((value) {
-                  return Chip(
-                    label: Text(
-                      value,
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                    onDeleted: () {
-                      setState(() {
-                        List<String> updatedValues = List.from(widget.values);
-                        updatedValues
-                            .remove(value); // Elimina el valor del arreglo
-                        widget.onDeleteValue(
-                            updatedValues); // Llama a la función de eliminación con el arreglo actualizado
-                      });
+                  return GestureDetector(
+                    onTap: () async {
+                      final Uri whatsappUrl = Uri.parse("https://wa.me/$value");
+
+                      try {
+                        await launchUrl(whatsappUrl,
+                            mode: LaunchMode.externalApplication);
+                      } catch (e) {
+                        if (context.mounted) {
+                          NotificationsService.show(
+                              context,
+                              "No se puede abrir WhatsApp",
+                              SnackbarCategory.error);
+                        }
+                      }
                     },
-                    deleteIcon: const Icon(
-                      Icons.delete,
-                      size: 16,
-                      color: Colors.red,
+                    child: Chip(
+                      label: Text(
+                        value,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                      onDeleted: () {
+                        setState(() {
+                          List<String> updatedValues = List.from(widget.values);
+                          updatedValues
+                              .remove(value); // Elimina el valor del arreglo
+                          widget.onDeleteValue(
+                              updatedValues); // Llama a la función de eliminación con el arreglo actualizado
+                        });
+                      },
+                      deleteIcon: const Icon(
+                        Icons.delete,
+                        size: 16,
+                        color: Colors.red,
+                      ),
                     ),
                   );
                 }).toList(),

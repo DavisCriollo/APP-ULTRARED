@@ -10,7 +10,7 @@ class CustomExpansionTile extends StatelessWidget {
     super.key,
     required this.label,
     required this.values,
-    required this.errorMessage,
+    this.errorMessage,
     required this.children,
     this.suffixIcon,
   });
