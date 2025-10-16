@@ -1,6 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ultrared/features/actividades/domain/entities/actividad.dart';
 import 'package:ultrared/features/actividades/presentation/provider/actividad_provider.dart';
@@ -19,8 +20,6 @@ import 'package:ultrared/features/shared/widgets/form/custom_date_picker_button.
 import 'package:ultrared/features/shared/widgets/form/custom_expandable_email_list.dart';
 import 'package:ultrared/features/shared/widgets/form/custom_expandable_list_with_cards.dart';
 import 'package:ultrared/features/shared/widgets/form/custom_expandable_list_with_delegate.dart';
-import 'package:ultrared/features/shared/widgets/form/custom_expandable_phone_list.dart';
-import 'package:ultrared/features/shared/widgets/form/custom_expansion_tile.dart';
 import 'package:ultrared/features/shared/widgets/form/image_gallery.dart';
 import 'package:ultrared/features/shared/widgets/form/signature_field.dart';
 import 'package:ultrared/features/shared/widgets/form/title_divider.dart';
@@ -378,15 +377,22 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
 
             CustomExpandableListWithDelegate(
               label: 'Tel Cliente',
-              tel: true,
-              onDeleteValue: (p0) async {
-                final Uri whatsappUrl = Uri.parse("https://wa.me/50376681782");
+              onDeleteValue: (p0) async {},
+              trealingIcon: Icon(
+                FontAwesomeIcons.whatsapp,
+                color: Colors.green,
+              ),
+              onPressedTrealing: (value) async {
+                final Uri whatsappUrl = Uri.parse("https://wa.me/$value");
 
-                if (await canLaunchUrl(whatsappUrl)) {
+                try {
                   await launchUrl(whatsappUrl,
                       mode: LaunchMode.externalApplication);
-                } else {
-                  print("No se puede abrir WhatsApp");
+                } catch (e) {
+                  if (context.mounted) {
+                    NotificationsService.show(context,
+                        "No se puede abrir WhatsApp", SnackbarCategory.error);
+                  }
                 }
               },
               values: actividadState.actividadForm.actaTelCliente,

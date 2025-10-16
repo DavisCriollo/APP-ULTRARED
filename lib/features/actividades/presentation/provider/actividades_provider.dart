@@ -33,12 +33,13 @@ final actividadesProvider =
     // final getUsuarioNombre = ref.watch(authProvider.notifier).getUsuarioNombre;
     final actividadesRepository = ref.watch(actividadesRepositoryProvider);
     final socket = ref.watch(socketProvider);
+    final usuario = authState.user;
     return ActividadesNotifier(
-      socket: socket,
-      actividadesRepository: actividadesRepository,
-      user: authState.user!,
-      isAdmin: authState.isAdmin,
-    );
+        socket: socket,
+        actividadesRepository: actividadesRepository,
+        user: authState.user!,
+        isAdmin: authState.isAdmin,
+        usuario: usuario!);
   },
 );
 
@@ -47,12 +48,14 @@ class ActividadesNotifier extends StateNotifier<ActividadesState> {
   final io.Socket socket;
   final User user;
   final bool isAdmin;
+  final User usuario;
 
   ActividadesNotifier({
     required this.actividadesRepository,
     required this.socket,
     required this.user,
     required this.isAdmin,
+    required this.usuario,
   }) : super(ActividadesState()) {
     print('INIT VENTAS PROVIDER');
     _initializeSocketListeners();
@@ -237,6 +240,20 @@ class ActividadesNotifier extends StateNotifier<ActividadesState> {
     } else {
       socket.emit("client:guardarData", actividadMap);
     }
+  }
+
+  Future<void> changeEstadoActividad(Actividad actividad) async {
+    socket.emit('client:actualizarData', {
+      ...actividad.toJson(),
+      "rucempresa": usuario.rucempresa,
+      "rol": usuario.rol,
+      "actaUser": usuario.usuario,
+      "actaEmpresa": usuario.rucempresa,
+      "tabla": "acta_entrega_recepcion",
+
+      // actaFotos: resDocumentos,
+      // nombres_tecnicos: tecnicos.join(", "),
+    });
   }
 
   void _initializeSocketListeners() {

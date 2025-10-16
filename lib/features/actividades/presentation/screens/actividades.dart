@@ -2,7 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ultrared/features/actividades/domain/entities/actividad.dart'; 
+import 'package:ultrared/features/actividades/domain/entities/actividad.dart';
 import 'package:ultrared/features/actividades/infrastructure/delegatesFunction/delegates.dart';
 import 'package:ultrared/features/actividades/presentation/provider/actividad_provider.dart';
 import 'package:ultrared/features/actividades/presentation/provider/actividades_provider.dart';
@@ -66,6 +66,8 @@ class ActividadesViewState extends ConsumerState<ActividadesScreen> {
     final isLoadingActividad = ref.watch(actividadFormProvider).isLoading;
     final loadActividad =
         ref.watch(actividadFormProvider.notifier).loadActividad;
+    final changeEstadoActividad =
+        ref.watch(actividadesProvider.notifier).changeEstadoActividad;
     // final deleteActividad =
     //     ref.watch(actividadesProvider.notifier).;
     // final isAdmin = ref.watch(authProvider).isAdmin;
@@ -299,6 +301,7 @@ class ActividadesViewState extends ConsumerState<ActividadesScreen> {
                           onDelete: () async {
                             // lógica de eliminación
                           },
+                          changeEstadoActividad: changeEstadoActividad,
                         );
                       },
                     ),

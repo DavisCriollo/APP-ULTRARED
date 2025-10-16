@@ -7,6 +7,8 @@ import 'package:ultrared/features/shared/helpers/format.dart';
 import 'package:ultrared/features/shared/utils/responsive.dart';
 import 'package:ultrared/features/shared/widgets/card/card_container.dart';
 import 'package:ultrared/features/shared/widgets/card/card_mar_pad.dart';
+import 'package:ultrared/features/shared/widgets/modal/cupertino_modal.dart';
+import 'package:ultrared/main.dart';
 
 class ActividadCard extends ConsumerWidget {
   final Actividad actividad;
@@ -14,6 +16,7 @@ class ActividadCard extends ConsumerWidget {
   final bool redirect;
   final Future<void> Function() onDelete; // Función para eliminar con Future
   final void Function(Actividad actividadToActive) loadActividad;
+  final Future<void> Function(Actividad actividad)? changeEstadoActividad;
   const ActividadCard({
     super.key,
     required this.actividad,
@@ -21,6 +24,7 @@ class ActividadCard extends ConsumerWidget {
     required this.redirect,
     required this.onDelete, // Recibir la función de eliminación
     required this.loadActividad, // Recibir la función de eliminación
+    this.changeEstadoActividad,
   });
 
   @override
@@ -31,16 +35,35 @@ class ActividadCard extends ConsumerWidget {
       size: size,
       child: Slidable(
         key: ValueKey(actividad.actaId),
-        startActionPane: ActionPane(
+        endActionPane: ActionPane(
           motion: const DrawerMotion(),
           children: [
             SlidableAction(
-              onPressed: (context) async {
-                await onDelete(); // Llamar a la función de eliminación con await
+              backgroundColor: colors.primary.contrastText,
+              onPressed: (a) async {
+                String resC = await cupertinoModal(
+                      context,
+                      size,
+                      'Cambio de estado',
+                      [
+                        "PENDIENTE",
+                        "EN PROCESO",
+                        "SUSPENDIDO",
+                        "PROCESADO",
+                        "ANULADO",
+                      ],
+                      warning: false,
+                    ) ??
+                    '';
+                if (changeEstadoActividad != null) {
+                  changeEstadoActividad!(
+                    actividad.copyWith(actaEstado: resC),
+                  );
+                }
               },
-              foregroundColor: Colors.black,
-              icon: Icons.delete,
-              label: 'Eliminar',
+              foregroundColor: colors.primary,
+              icon: Icons.change_circle,
+              label: 'Cambiar Estado',
             ),
           ],
         ),

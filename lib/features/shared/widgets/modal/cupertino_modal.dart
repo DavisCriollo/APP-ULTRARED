@@ -23,7 +23,10 @@ Future<String?> cupertinoModal(
         ),
         actions: options.map<CupertinoActionSheetAction>((String option) {
           return CupertinoActionSheetAction(
-            child: Text(option),
+            child: Text(option,
+                style: TextStyle(
+                  fontSize: size.iScreen(1.7),
+                )),
             onPressed: () {
               Navigator.pop(context, option);
             },
