@@ -6,6 +6,7 @@ import 'package:ultrared/features/auth/presentation/providers/login_form_provide
 import 'package:ultrared/features/shared/msg/show_snackbar.dart';
 import 'package:ultrared/features/shared/shared.dart';
 import 'package:ultrared/features/shared/utils/responsive.dart';
+import 'package:ultrared/main.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -76,6 +77,7 @@ class _LoginForm extends ConsumerWidget {
     if (loginForm.isLoadingData) {
       return const FullScreenLoader();
     }
+    final colors = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 45),
       child: Column(
@@ -134,11 +136,12 @@ class _LoginForm extends ConsumerWidget {
               // height: responsive.wScreen(40),
               child: FilledButton(
                 style: ButtonStyle(
-                  backgroundColor: WidgetStateProperty.all<Color>(Colors.black),
+                  backgroundColor: WidgetStateProperty.all<Color>(colors.primary),
+                  foregroundColor: WidgetStateProperty.all<Color>(colors.primary.contrastText),
                   shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(
-                          8.0), // Ajusta el valor según lo redondeado que quieras el botón
+                          15), // Ajusta el valor según lo redondeado que quieras el botón
                     ),
                   ),
                 ),

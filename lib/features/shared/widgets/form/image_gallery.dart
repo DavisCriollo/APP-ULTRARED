@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:ultrared/features/shared/domain/entities/imagen.dart';
 import 'package:ultrared/features/shared/infrastructure/services/camera_gallery_service_impl.dart';
+import 'package:ultrared/features/shared/screen/full_screen_images.dart';
 import 'package:ultrared/features/shared/utils/responsive.dart';
 
 class ImageGallery extends StatelessWidget {
@@ -71,57 +72,71 @@ class ImageGallery extends StatelessWidget {
                   }
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.all(Radius.circular(20)),
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          FadeInImage(
-                            fit: BoxFit.cover,
-                            image: imageProvider,
-                            placeholder: const AssetImage(
-                                'assets/loaders/bottle-loader.gif'),
-                          ),
-                          Positioned(
-                            right: 6,
-                            top: 6,
-                            child: DecoratedBox(
-                              decoration: BoxDecoration(
-                                color: Colors.black45,
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: IconButton(
-                                icon: const Icon(Icons.delete,
-                                    size: 18, color: Colors.white),
-                                onPressed: () {
-                                  onDelete(
-                                      image.url, image.url.startsWith('http'));
-                                },
-                              ),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => FullScreenImagesPage(
+                              images: images,
+                              initialIndex: images.indexOf(image),
                             ),
                           ),
-                          Positioned(
-                            right: 6,
-                            bottom: 6,
-                            child: FloatingActionButton.small(
-                              heroTag:
-                                  ValueKey('image_gallery_add_${image.url}'),
-                              onPressed: () async {
-                                final photPath =
-                                    await CameraGalleryServiceImpl()
-                                        .selectPhotos();
+                        );
+                      },
+                      child: ClipRRect(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(20)),
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            FadeInImage(
+                              fit: BoxFit.cover,
+                              image: imageProvider,
+                              placeholder: const AssetImage(
+                                  'assets/loaders/bottle-loader.gif'),
+                            ),
+                            Positioned(
+                              right: 6,
+                              top: 6,
+                              child: DecoratedBox(
+                                decoration: BoxDecoration(
+                                  color: Colors.black45,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: IconButton(
+                                  icon: const Icon(Icons.delete,
+                                      size: 18, color: Colors.white),
+                                  onPressed: () {
+                                    onDelete(image.url,
+                                        image.url.startsWith('http'));
+                                  },
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              right: 6,
+                              bottom: 6,
+                              child: FloatingActionButton.small(
+                                heroTag:
+                                    ValueKey('image_gallery_add_${image.url}'),
+                                onPressed: () async {
+                                  final photPath =
+                                      await CameraGalleryServiceImpl()
+                                          .selectPhotos();
 
-                                await onAdd(photPath
-                                    .map((e) => Imagen(
-                                        nombre: 'imagen${images.length + 1}',
-                                        url: e))
-                                    .toList());
-                                // caller actualizará la lista si retorna url != null
-                              },
-                              child: const Icon(Icons.add),
+                                  await onAdd(photPath
+                                      .map((e) => Imagen(
+                                          nombre: 'imagen${images.length + 1}',
+                                          url: e))
+                                      .toList());
+                                  // caller actualizará la lista si retorna url != null
+                                },
+                                child: const Icon(Icons.add),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   );

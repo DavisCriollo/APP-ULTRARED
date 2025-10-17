@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:ultrared/features/actividades/domain/entities/actividad.dart';
@@ -6,6 +8,22 @@ import 'package:ultrared/features/actividades/presentation/provider/actividades_
 import 'package:ultrared/features/auth/domain/domain.dart';
 import 'package:ultrared/features/auth/presentation/providers/auth_provider.dart';
 import 'package:ultrared/features/shared/provider/socket.dart';
+
+void printLargeMap(Map<String, dynamic> map, {int chunkSize = 10}) {
+  final entries = map.entries.toList();
+  final totalChunks = (entries.length / chunkSize).ceil();
+
+  for (int i = 0; i < totalChunks; i++) {
+    final start = i * chunkSize;
+    final end = start + chunkSize;
+    final chunk =
+        entries.sublist(start, end > entries.length ? entries.length : end);
+
+    final chunkMap = Map.fromEntries(chunk);
+    // Convertir el fragmento en un mapa
+    print('Parte ${i + 1} de $totalChunks: ${jsonEncode(chunkMap)}');
+  }
+}
 
 enum ActividadEstado {
   pendientes("PENDIENTES"),
@@ -243,6 +261,17 @@ class ActividadesNotifier extends StateNotifier<ActividadesState> {
   }
 
   Future<void> changeEstadoActividad(Actividad actividad) async {
+    printLargeMap({
+      ...actividad.toJson(),
+      "rucempresa": usuario.rucempresa,
+      "rol": usuario.rol,
+      "actaUser": usuario.usuario,
+      "actaEmpresa": usuario.rucempresa,
+      "tabla": "acta_entrega_recepcion",
+
+      // actaFotos: resDocumentos,
+      // nombres_tecnicos: tecnicos.join(", "),
+    });
     socket.emit('client:actualizarData', {
       ...actividad.toJson(),
       "rucempresa": usuario.rucempresa,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:ultrared/features/shared/helpers/whatsapp.dart';
 import 'package:ultrared/features/shared/msg/show_snackbar.dart';
 import 'package:ultrared/features/shared/widgets/form/custom_expansion_tile.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -110,19 +111,20 @@ class CustomExpandablePhoneListState extends State<CustomExpandablePhoneList> {
                 children: widget.values.map((value) {
                   return GestureDetector(
                     onTap: () async {
-                      final Uri whatsappUrl = Uri.parse("https://wa.me/$value");
+                      launchWhatsApp(context, value);
+                      // final Uri whatsappUrl = Uri.parse("https://wa.me/$value");
 
-                      try {
-                        await launchUrl(whatsappUrl,
-                            mode: LaunchMode.externalApplication);
-                      } catch (e) {
-                        if (context.mounted) {
-                          NotificationsService.show(
-                              context,
-                              "No se puede abrir WhatsApp",
-                              SnackbarCategory.error);
-                        }
-                      }
+                      // try {
+                      //   await launchUrl(whatsappUrl,
+                      //       mode: LaunchMode.externalApplication);
+                      // } catch (e) {
+                      //   if (context.mounted) {
+                      //     NotificationsService.show(
+                      //         context,
+                      //         "No se puede abrir WhatsApp",
+                      //         SnackbarCategory.error);
+                      //   }
+                      // }
                     },
                     child: Chip(
                       label: Text(

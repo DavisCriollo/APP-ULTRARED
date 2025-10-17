@@ -10,6 +10,8 @@ import 'package:ultrared/features/actividades/presentation/widgets/equipo_instal
 import 'package:ultrared/features/actividades/presentation/widgets/show_dialog_cargo.dart';
 import 'package:ultrared/features/actividades/presentation/widgets/show_dialog_equipo_instalado.dart';
 import 'package:ultrared/features/clientes/infrastructure/delegatesFunction/delegates.dart';
+import 'package:ultrared/features/shared/helpers/format.dart';
+import 'package:ultrared/features/shared/helpers/whatsapp.dart';
 import 'package:ultrared/features/shared/infrastructure/delegatesFunction/delegates.dart';
 import 'package:ultrared/features/shared/msg/show_snackbar.dart';
 import 'package:ultrared/features/shared/provider/shared_data_provider.dart';
@@ -22,8 +24,7 @@ import 'package:ultrared/features/shared/widgets/form/custom_expandable_list_wit
 import 'package:ultrared/features/shared/widgets/form/custom_expandable_list_with_delegate.dart';
 import 'package:ultrared/features/shared/widgets/form/image_gallery.dart';
 import 'package:ultrared/features/shared/widgets/form/signature_field.dart';
-import 'package:ultrared/features/shared/widgets/form/title_divider.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:ultrared/features/shared/widgets/form/title_divider.dart'; 
 
 class ActividadScreen extends ConsumerWidget {
   const ActividadScreen({
@@ -122,7 +123,7 @@ class _FloatingButton extends ConsumerWidget {
               infinite: true,
               child: const Icon(Icons.refresh),
             )
-          : const Icon(Icons.add),
+          : const Icon(Icons.save),
     );
   }
 }
@@ -383,17 +384,7 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
                 color: Colors.green,
               ),
               onPressedTrealing: (value) async {
-                final Uri whatsappUrl = Uri.parse("https://wa.me/$value");
-
-                try {
-                  await launchUrl(whatsappUrl,
-                      mode: LaunchMode.externalApplication);
-                } catch (e) {
-                  if (context.mounted) {
-                    NotificationsService.show(context,
-                        "No se puede abrir WhatsApp", SnackbarCategory.error);
-                  }
-                }
+                launchWhatsApp(context, value);
               },
               values: actividadState.actividadForm.actaTelCliente,
             ),
@@ -485,7 +476,7 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
                   );
                 },
                 label: 'Fecha Instalación',
-                value: actividadState.actividadForm.actaFechaInstalacion,
+                value: Format.formatFecha(actividadState.actividadForm.actaFechaInstalacion),
               ),
             if (actividadState.actividadForm.actaOpcion == "Nueva Instalación")
               CustomInputField(

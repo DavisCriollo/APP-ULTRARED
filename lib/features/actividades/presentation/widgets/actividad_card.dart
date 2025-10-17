@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ultrared/features/actividades/domain/entities/actividad.dart';
 import 'package:ultrared/features/shared/helpers/format.dart';
+import 'package:ultrared/features/shared/helpers/whatsapp.dart';
 import 'package:ultrared/features/shared/utils/responsive.dart';
 import 'package:ultrared/features/shared/widgets/card/card_container.dart';
 import 'package:ultrared/features/shared/widgets/card/card_mar_pad.dart';
@@ -55,6 +57,7 @@ class ActividadCard extends ConsumerWidget {
                       warning: false,
                     ) ??
                     '';
+                print(resC);
                 if (changeEstadoActividad != null) {
                   changeEstadoActividad!(
                     actividad.copyWith(actaEstado: resC),
@@ -132,10 +135,38 @@ class ActividadCard extends ConsumerWidget {
                       ),
 
                       // Teléfonos (si existen)
-                      Text(
-                        actividad.actaTelCliente.join(", "),
-                        style: TextStyle(fontSize: size.iScreen(1.4)),
-                      ),
+                      Column(
+                        children: actividad.actaTelCliente.map(
+                          (e) {
+                            return Row(
+                              children: [
+                                Text(e),
+                                SizedBox(
+                                  width: 30,
+                                  height: 30,
+                                  child: IconButton(
+                                    padding: EdgeInsets.zero,
+                                    constraints: BoxConstraints(),
+                                    onPressed: () {
+                                      launchWhatsApp(context, e);
+                                    },
+                                    icon: Icon(
+                                      FontAwesomeIcons.whatsapp,
+                                      size:
+                                          25, // Puedes ajustar este valor según lo pequeño que lo quieras
+                                      color: Colors.green,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            );
+                          },
+                        ).toList(),
+                      )
+                      // Text(
+                      //   .join(", "),
+                      //   style: TextStyle(fontSize: size.iScreen(1.4)),
+                      // ),
                     ],
                   ),
                 ),
