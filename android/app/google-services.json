@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "908874057989",
+    "project_id": "flutter-proyect-da4da",
+    "storage_bucket": "flutter-proyect-da4da.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:908874057989:android:383ec7c7c7223fceef0f6c",
+        "android_client_info": {
+          "package_name": "com.example.ultrared"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfzjHadRaFd_FWN_xHGYmgkxsKqPDXdkg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:908874057989:android:0deae4a07593733fef0f6c",
+        "android_client_info": {
+          "package_name": "com.example.ultrared"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfzjHadRaFd_FWN_xHGYmgkxsKqPDXdkg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

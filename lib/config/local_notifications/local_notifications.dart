@@ -2,7 +2,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:open_file/open_file.dart';
 
 class LocalNotifications {
-  static final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  static final flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
   static Future<void> requestPermisionLocalNotification() async {
     await flutterLocalNotificationsPlugin
@@ -12,12 +13,18 @@ class LocalNotifications {
   }
 
   static Future<void> initializeLocalNotifications() async {
-    const initializationSettingAndroid = AndroidInitializationSettings('app_icon'); 
-    const InitializationSettings initializationSettings = InitializationSettings(
-      android: initializationSettingAndroid,
-    );
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onDidReceiveNotificationResponse: onDidReceiveNotificationResponse);
+    try {
+      const initializationSettingAndroid =
+          AndroidInitializationSettings('app_icon');
+      const InitializationSettings initializationSettings =
+          InitializationSettings(
+        android: initializationSettingAndroid,
+      );
+      await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+          onDidReceiveNotificationResponse: onDidReceiveNotificationResponse);
+    } catch (e) {
+      print(e);
+    }
   }
 
   static void showLocalNotification(
