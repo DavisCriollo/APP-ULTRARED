@@ -118,7 +118,7 @@ class _HomeView extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Ver: 4.8',
+                      'Ver: 0.1',
                       style: TextStyle(
                         fontSize: size.iScreen(1.7),
                         fontWeight: FontWeight.bold,

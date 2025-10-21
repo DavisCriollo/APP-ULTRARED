@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:ultrared/features/shared/msg/show_snackbar.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:ultrared/features/actividades/domain/entities/ubicacion.dart';
-import 'package:ultrared/features/shared/widgets/form/editable_map.dart';
+import 'package:ultrared/features/shared/widgets/form/editable_map.dart'; 
 
 class ButtonMap extends StatelessWidget {
   final Ubicacion ubicacion;
@@ -12,6 +14,26 @@ class ButtonMap extends StatelessWidget {
     required this.ubicacion,
     required this.onUbicacionActualizada,
   });
+
+  Future<void> _abrirCoordenadas(BuildContext context) async {
+    final lat = ubicacion.latitud;
+    final lng = ubicacion.longitud;
+
+    final wazeUrl = Uri.parse('https://waze.com/ul?ll=$lat,$lng&navigate=yes');
+    final googleMapsUrl = Uri.parse('https://www.google.com/maps/search/?api=1&query=$lat,$lng');
+
+    if (await canLaunchUrl(wazeUrl)) {
+      await launchUrl(wazeUrl, mode: LaunchMode.externalApplication);
+    } else if (await canLaunchUrl(googleMapsUrl)) {
+      await launchUrl(googleMapsUrl, mode: LaunchMode.externalApplication);
+    } else {
+      NotificationsService.show(
+        context,
+        'No se pudo abrir las coordenadas',
+        SnackbarCategory.error,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +68,11 @@ class ButtonMap extends StatelessWidget {
               },
             );
           },
+        ),
+        IconButton(
+          icon: const Icon(Icons.directions),
+          tooltip: 'Abrir en Waze o Google Maps',
+          onPressed: () => _abrirCoordenadas(context),
         ),
         const SizedBox(width: 8),
         Column(
