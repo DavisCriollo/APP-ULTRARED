@@ -19,7 +19,7 @@ void main() async {
   final container = ProviderContainer();
   await NotificationsNotifier
       .initializeFirebaseNotifications(); // ✅ Usas tu provider
-  await container.read(notificationsProvider.notifier).requestPermissions();
+  // await container.read(notificationsProvider.notifier).requestPermissions();
   await LocalNotifications.initializeLocalNotifications();
 
   final storage = KeyValueStorageImpl();

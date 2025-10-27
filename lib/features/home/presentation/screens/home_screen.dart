@@ -4,29 +4,46 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ultrared/config/menu/menu_item.dart';
 import 'package:ultrared/features/auth/presentation/providers/auth_provider.dart';
 import 'package:ultrared/features/home/presentation/widgets/item_menu.dart';
+import 'package:ultrared/features/shared/msg/show_snackbar.dart';
+import 'package:ultrared/features/shared/provider/notification.dart';
 // import 'package:ultrared/features/auth/presentation/providers/auth_provider.dart';
 import 'package:ultrared/features/shared/shared.dart';
 import 'package:ultrared/features/shared/utils/responsive.dart';
 import 'package:ultrared/features/shared/widgets/ui/custom_app_bar.dart';
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    super.initState();
+    // Aquí puedes ejecutar tu función al cargar el widget
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(notificationsProvider.notifier).requestPermissions();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
-    final scaffoldKey = GlobalKey<ScaffoldState>();
-    // final colors = Theme.of(context).colorScheme;
+
     return Scaffold(
-        drawer: SideMenu(scaffoldKey: scaffoldKey),
-        appBar: CustomAppBar(
-          title: 'Home',
-          userName:
-              authState.user!.nombre, // Reemplaza con el nombre del usuario
-          moduleName: 'Home',
-          logoUrl: authState.user!.logo, // Ruta de la imagen del logo
-        ),
-        body: _HomeView());
+      drawer: SideMenu(scaffoldKey: scaffoldKey),
+      appBar: CustomAppBar(
+        title: 'Home',
+        userName: authState.user!.nombre,
+        moduleName: 'Home',
+        logoUrl: authState.user!.logo,
+      ),
+      body: _HomeView(),
+    );
   }
 }
 
@@ -35,7 +52,7 @@ class _HomeView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authProvider);
 
-    final size = Responsive.of(context); 
+    final size = Responsive.of(context);
     return SizedBox(
       width: size.wScreen(100),
       height: size.hScreen(100),
