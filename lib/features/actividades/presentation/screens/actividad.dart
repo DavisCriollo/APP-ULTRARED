@@ -9,6 +9,7 @@ import 'package:ultrared/features/actividades/presentation/widgets/cargo_card.da
 import 'package:ultrared/features/actividades/presentation/widgets/equipo_instalado_card.dart';
 import 'package:ultrared/features/actividades/presentation/widgets/show_dialog_cargo.dart';
 import 'package:ultrared/features/actividades/presentation/widgets/show_dialog_equipo_instalado.dart';
+import 'package:ultrared/features/auth/presentation/providers/auth_provider.dart';
 import 'package:ultrared/features/clientes/infrastructure/delegatesFunction/delegates.dart';
 import 'package:ultrared/features/shared/helpers/format.dart';
 import 'package:ultrared/features/shared/helpers/whatsapp.dart';
@@ -24,7 +25,7 @@ import 'package:ultrared/features/shared/widgets/form/custom_expandable_list_wit
 import 'package:ultrared/features/shared/widgets/form/custom_expandable_list_with_delegate.dart';
 import 'package:ultrared/features/shared/widgets/form/image_gallery.dart';
 import 'package:ultrared/features/shared/widgets/form/signature_field.dart';
-import 'package:ultrared/features/shared/widgets/form/title_divider.dart'; 
+import 'package:ultrared/features/shared/widgets/form/title_divider.dart';
 
 class ActividadScreen extends ConsumerWidget {
   const ActividadScreen({
@@ -80,7 +81,7 @@ class ActividadScreen extends ConsumerWidget {
         appBar: AppBar(
           title: Text(actividadState.actividadForm.actaId == 0
               ? 'Nueva Actividad'
-              : 'Editar Actividad'),
+              : 'Ver Actividad'),
         ),
         body: actividadState.isLoading
             // ||
@@ -176,6 +177,8 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
     final actividadState = ref.watch(actividadFormProvider);
     final actividadNotifier = ref.watch(actividadFormProvider.notifier);
     final updateForm = actividadNotifier.updateState;
+    final isTecnico =
+        ref.read(authProvider.notifier).isRol(rolesToFind: ['TECNICO']);
     final actividadFormCopyWith = actividadState.actividadForm.copyWith;
     final colors = Theme.of(context).colorScheme;
     final size = Responsive.of(context);
@@ -327,9 +330,10 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
             // this.actaFechaInstalacion,
             // this.actaDocVendedor,
             // this.planNombreInternet,
+            Text(isTecnico ? "isTecnico" : 'NO ES'),
             CustomInputField(
               errorMessage: actividadState.validacionActividad.actaDocCliente,
-              onTap: setClienteDelegate,
+              onTap: isTecnico ? null : setClienteDelegate,
               readOnly: true,
               controller: TextEditingController(
                   text:
@@ -338,7 +342,7 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
               label: 'Cliente',
               onChanged: (p0) {},
               suffixIcon: IconButton(
-                onPressed: setClienteDelegate,
+                onPressed: isTecnico ? null : setClienteDelegate,
                 icon: Icon(
                   Icons.search,
                   color: colors.primary,
@@ -356,7 +360,11 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
               // errorMessage:
               //     clienteFState.clienteForm.perEmailInput.errorMessage,
               label: 'Correos',
+
               onAddValue: (p0) {
+                if (isTecnico) {
+                  return;
+                }
                 updateForm(
                     actividadForm: actividadFormCopyWith(actaEmailCliente: [
                   p0,
@@ -364,6 +372,9 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
                 ]));
               },
               onDeleteValue: (p0) {
+                if (isTecnico) {
+                  return;
+                }
                 updateForm(
                     actividadForm: actividadFormCopyWith(actaEmailCliente: p0));
               },
@@ -392,14 +403,14 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
             const TitleDivider(title: 'Ubicación'),
             CustomInputField(
               errorMessage: actividadState.validacionActividad.actaCiudad,
-              onTap: setCiudadDelegate,
+              onTap: isTecnico ? null : setCiudadDelegate,
               readOnly: true,
               controller: TextEditingController(
                   text: actividadState.actividadForm.actaCiudad),
               label: 'Sector',
               onChanged: (p0) {},
               suffixIcon: IconButton(
-                onPressed: setCiudadDelegate,
+                onPressed: isTecnico ? null : setCiudadDelegate,
                 icon: Icon(
                   Icons.search,
                   color: colors.primary,
@@ -415,7 +426,7 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
                 );
               },
               values: actividadState.actividadForm.actaSector,
-              onTap: setNewSectorDelegate,
+              onTap: isTecnico ? null : setNewSectorDelegate,
             ),
             ButtonMap(
               ubicacion: actividadState.actividadForm.actaUbicacion,
@@ -476,7 +487,8 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
                   );
                 },
                 label: 'Fecha Instalación',
-                value: Format.formatFecha(actividadState.actividadForm.actaFechaInstalacion),
+                value: Format.formatFecha(
+                    actividadState.actividadForm.actaFechaInstalacion),
               ),
             if (actividadState.actividadForm.actaOpcion == "Nueva Instalación")
               CustomInputField(

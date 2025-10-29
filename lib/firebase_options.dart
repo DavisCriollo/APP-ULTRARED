@@ -63,7 +63,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '908874057989',
     projectId: 'flutter-proyect-da4da',
     storageBucket: 'flutter-proyect-da4da.firebasestorage.app',
-    iosBundleId: 'com.example.pushApp',
+    iosBundleId: 'com.example.ultrared',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -72,7 +72,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '908874057989',
     projectId: 'flutter-proyect-da4da',
     storageBucket: 'flutter-proyect-da4da.firebasestorage.app',
-    iosBundleId: 'com.example.pushApp',
+    iosBundleId: 'com.example.ultrared',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(

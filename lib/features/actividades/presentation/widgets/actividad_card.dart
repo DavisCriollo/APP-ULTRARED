@@ -58,7 +58,7 @@ class ActividadCard extends ConsumerWidget {
                     ) ??
                     '';
                 print(resC);
-                if (changeEstadoActividad != null) {
+                if (changeEstadoActividad != null && resC.isNotEmpty) {
                   changeEstadoActividad!(
                     actividad.copyWith(actaEstado: resC),
                   );

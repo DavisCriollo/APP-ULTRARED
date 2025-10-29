@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ultrared/config/menu/menu_item.dart';
 import 'package:ultrared/features/auth/presentation/providers/auth_provider.dart';
 import 'package:ultrared/features/home/presentation/widgets/item_menu.dart';
-import 'package:ultrared/features/shared/msg/show_snackbar.dart';
 import 'package:ultrared/features/shared/provider/notification.dart';
 // import 'package:ultrared/features/auth/presentation/providers/auth_provider.dart';
 import 'package:ultrared/features/shared/shared.dart';
@@ -135,7 +134,7 @@ class _HomeView extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Ver: 0.1',
+                      'Ver: 0.2.0',
                       style: TextStyle(
                         fontSize: size.iScreen(1.7),
                         fontWeight: FontWeight.bold,

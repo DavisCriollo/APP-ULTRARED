@@ -107,6 +107,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
       empresaPropery: state.user?.rucempresa,
     };
   }
+
+  bool isRol({required List<String> rolesToFind}) {
+    return state.user!.rol.toSet().intersection(rolesToFind.toSet()).isNotEmpty;
+  }
 }
 
 class AuthState {
