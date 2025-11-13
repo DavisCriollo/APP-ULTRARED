@@ -46,12 +46,15 @@ class ImageGallery extends StatelessWidget {
                         heroTag: const ValueKey('image_gallery_add_empty'),
                         onPressed: () async {
                           final photPath =
-                              await CameraGalleryServiceImpl().selectPhotos();
+                              await CameraGalleryServiceImpl().takePhoto();
+                          if (photPath != null && photPath.isNotEmpty) {
+                            await onAdd([
+                              Imagen(
+                                  nombre: 'imagen${images.length + 1}',
+                                  url: photPath)
+                            ]);
+                          }
 
-                          await onAdd(photPath
-                              .map((e) => Imagen(
-                                  nombre: 'imagen${images.length + 1}', url: e))
-                              .toList());
                           // El manejo del resultado (actualizar lista) lo hace el caller.
                         },
                         child: const Icon(Icons.add_a_photo),
@@ -123,16 +126,18 @@ class ImageGallery extends StatelessWidget {
                                 onPressed: () async {
                                   final photPath =
                                       await CameraGalleryServiceImpl()
-                                          .selectPhotos();
-
-                                  await onAdd(photPath
-                                      .map((e) => Imagen(
+                                          .takePhoto();
+                                  if (photPath != null && photPath.isNotEmpty) {
+                                    await onAdd([
+                                      Imagen(
                                           nombre: 'imagen${images.length + 1}',
-                                          url: e))
-                                      .toList());
+                                          url: photPath)
+                                    ]);
+                                  }
+
                                   // caller actualizará la lista si retorna url != null
                                 },
-                                child: const Icon(Icons.add),
+                                child: const Icon(Icons.add_a_photo),
                               ),
                             ),
                           ],

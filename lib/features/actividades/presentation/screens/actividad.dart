@@ -552,7 +552,6 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
               controller: obsVenController,
               label: 'Observación Ventas',
               onChanged: (p0) {
-                obsVenController.text = p0;
                 updateForm(
                     actividadForm: actividadFormCopyWith(actaCalidadIns: p0));
               },
@@ -564,7 +563,6 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
               controller: obsTecController,
               label: 'Observación Técnico',
               onChanged: (p0) {
-                obsTecController.text = p0;
                 updateForm(
                     actividadForm:
                         actividadFormCopyWith(actaDetalleEstado: p0));
