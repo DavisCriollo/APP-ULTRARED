@@ -4,6 +4,7 @@ import 'package:ultrared/features/shared/domain/entities/imagen.dart';
 import 'package:ultrared/features/shared/infrastructure/services/camera_gallery_service_impl.dart';
 import 'package:ultrared/features/shared/screen/full_screen_images.dart';
 import 'package:ultrared/features/shared/utils/responsive.dart';
+import 'package:ultrared/features/shared/widgets/modal/cupertino_modal.dart';
 
 class ImageGallery extends StatelessWidget {
   final List<Imagen> images;
@@ -45,14 +46,36 @@ class ImageGallery extends StatelessWidget {
                       child: FloatingActionButton.small(
                         heroTag: const ValueKey('image_gallery_add_empty'),
                         onPressed: () async {
-                          final photPath =
-                              await CameraGalleryServiceImpl().takePhoto();
-                          if (photPath != null && photPath.isNotEmpty) {
-                            await onAdd([
-                              Imagen(
-                                  nombre: 'imagen${images.length + 1}',
-                                  url: photPath)
-                            ]);
+                          final resC = await cupertinoModal(
+                            context,
+                            size,
+                            'Subir imagenes',
+                            ['CAMARA', 'GALERIA'],
+                            warning: false,
+                          );
+
+                          if (resC == 'CAMARA') {
+                            final photPath =
+                                await CameraGalleryServiceImpl().takePhoto();
+                            if (photPath != null && photPath.isNotEmpty) {
+                              await onAdd([
+                                Imagen(
+                                    nombre: 'imagen${images.length + 1}',
+                                    url: photPath)
+                              ]);
+                            }
+                          }
+
+                          if (resC == 'GALERIA') {
+                            final fotos =
+                                await CameraGalleryServiceImpl().selectPhotos();
+                            if (fotos.isNotEmpty) {
+                              await onAdd(fotos
+                                  .map((path) => Imagen(
+                                      nombre: 'imagen${images.length + 1}',
+                                      url: path))
+                                  .toList());
+                            }
                           }
 
                           // El manejo del resultado (actualizar lista) lo hace el caller.
@@ -124,15 +147,41 @@ class ImageGallery extends StatelessWidget {
                                 heroTag:
                                     ValueKey('image_gallery_add_${image.url}'),
                                 onPressed: () async {
-                                  final photPath =
-                                      await CameraGalleryServiceImpl()
-                                          .takePhoto();
-                                  if (photPath != null && photPath.isNotEmpty) {
-                                    await onAdd([
-                                      Imagen(
-                                          nombre: 'imagen${images.length + 1}',
-                                          url: photPath)
-                                    ]);
+                                  final resC = await cupertinoModal(
+                                    context,
+                                    size,
+                                    'Subir imagenes',
+                                    ['CAMARA', 'GALERIA'],
+                                    warning: false,
+                                  );
+
+                                  if (resC == 'CAMARA') {
+                                    final photPath =
+                                        await CameraGalleryServiceImpl()
+                                            .takePhoto();
+                                    if (photPath != null &&
+                                        photPath.isNotEmpty) {
+                                      await onAdd([
+                                        Imagen(
+                                            nombre:
+                                                'imagen${images.length + 1}',
+                                            url: photPath)
+                                      ]);
+                                    }
+                                  }
+
+                                  if (resC == 'GALERIA') {
+                                    final fotos =
+                                        await CameraGalleryServiceImpl()
+                                            .selectPhotos();
+                                    if (fotos.isNotEmpty) {
+                                      await onAdd(fotos
+                                          .map((path) => Imagen(
+                                              nombre:
+                                                  'imagen${images.length + 1}',
+                                              url: path))
+                                          .toList());
+                                    }
                                   }
 
                                   // caller actualizará la lista si retorna url != null

@@ -1,10 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ultrared/config/router/app_router.notifier.dart';
-import 'package:ultrared/features/actividades/presentation/screens/actividad.dart'; 
+import 'package:ultrared/features/actividades/presentation/screens/actividad.dart';
 import 'package:ultrared/features/actividades/presentation/screens/actividades.dart';
 import 'package:ultrared/features/auth/auth.dart';
 import 'package:ultrared/features/auth/presentation/providers/auth_provider.dart';
+import 'package:ultrared/features/cuentas_por_cobrar/presentation/screens/cuenta_por_cobrar.dart';
+import 'package:ultrared/features/cuentas_por_cobrar/presentation/screens/cuentas_por_cobrar.dart';
+import 'package:ultrared/features/cuentas_por_cobrar/presentation/screens/pago_screen.dart';
 import 'package:ultrared/features/shared/screen/show_pdf_screen.dart';
 
 import 'package:ultrared/features/home/home.dart';
@@ -44,6 +47,26 @@ final goRouterProvider = Provider((ref) {
       GoRoute(
         path: '/actividad/:id',
         builder: (context, state) => const ActividadScreen(),
+      ),
+//* CUENTAS POR COBRAR
+      GoRoute(
+        path: '/cuenta_cobrar',
+        builder: (context, state) => CuentasPorCobrarScreen(
+          search: state.queryParams['search'] ?? '',
+        ),
+      ),
+      GoRoute(
+        path: '/cuenta_cobrar/:id',
+        builder: (context, state) => CuentaPorCobrar(
+          ccId: int.tryParse(state.params['id'].toString()) ?? 0,
+        ),
+      ),
+
+      GoRoute(
+        path: '/pago/:id',
+        builder: (context, state) => PagoScreen(
+          ccId: int.tryParse(state.params['id'].toString()) ?? 0,
+        ),
       ),
 
       GoRoute(

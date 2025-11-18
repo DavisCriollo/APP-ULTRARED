@@ -23,4 +23,11 @@ const appMenuItems = <MenuItem>[
     icon: 'assets/images/open-book.png',
     color: Colors.blue,
   ),
+  MenuItem(
+    title: 'Cuentas por Cobrar',
+    subTitle: "",
+    link: "/cuenta_cobrar",
+    icon: 'assets/images/open-book.png',
+    color: Colors.blue,
+  ),
 ];
