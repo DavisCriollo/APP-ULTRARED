@@ -93,7 +93,7 @@ class CcPago {
         ccComprobante: json["ccComprobante"],
         ccTipo: json["ccTipo"],
         ccBanco: json["ccBanco"],
-        ccNumero: json["ccNumero"],
+        ccNumero: Parse.parseDynamicToString(json["ccNumero"] ),
         ccDeposito: json["ccDeposito"],
         ccValor: Parse.parseDynamicToDouble(json["ccValor"]),
         ccFechaAbono: json["ccFechaAbono"],

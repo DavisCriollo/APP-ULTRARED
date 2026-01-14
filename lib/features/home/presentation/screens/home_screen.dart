@@ -50,6 +50,7 @@ class _HomeView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authProvider);
+    final authN = ref.watch(authProvider.notifier);
 
     final size = Responsive.of(context);
     return SizedBox(
@@ -94,14 +95,21 @@ class _HomeView extends ConsumerWidget {
                       //     icon: Icon(Icons.print)),
 
                       const SizedBox(height: 12),
+                      Text(authState.user!.rol.join(', ')),
                       Wrap(
                         alignment: WrapAlignment.center,
                         spacing: size.iScreen(1.0),
                         runSpacing: size.iScreen(1.0),
                         children: appMenuItems.map((menuItem) {
-                          if (!authState.isAdmin &&
-                              menuItem.title == 'Gestión' &&
-                              !authState.isDemo) {
+                          if (authState.isAdmin) {
+                            return ItemMenu(
+                              size: size,
+                              menuItem: menuItem,
+                            );
+                          }
+
+                          if (!authN.isRol(rolesToFind: ['TECNICO']) &&
+                              menuItem.title == 'Cuentas por Cobrar') {
                             return const SizedBox.shrink();
                           }
                           // if (authState.isDemo && menuItem.link == '/admin') {
@@ -134,7 +142,7 @@ class _HomeView extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Ver: 0.5.0',
+                      'Ver: 0.6.0',
                       style: TextStyle(
                         fontSize: size.iScreen(1.7),
                         fontWeight: FontWeight.bold,

@@ -34,7 +34,7 @@ class PagoScreen extends ConsumerWidget {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(ccId == 0 ? 'Nueva Caja' : 'Editar Cuenta por Cobrar'),
+          title: Text(ccId == 0 ? 'Nueva Caja' : 'Editar CxC'),
         ),
         body: _CuentaPorCobrarForm(
           ccId: ccId,
@@ -146,7 +146,22 @@ class _CuentaPorCobrarFormState extends ConsumerState<_CuentaPorCobrarForm> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            const SectionTitleDivider(title: 'Agregando Pago', fontSize: 18),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Text(
+                    '${cuentaPorCobrarState.cuentaPorCobrarForm.ccRucCliente} ${cuentaPorCobrarState.cuentaPorCobrarForm.ccNomCliente} ',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
+                  ),
+                )
+              ],
+            ),
+            const SectionTitleDivider(title: 'Agregando Pago', fontSize: 16),
             SectionTitleDivider(
               title:
                   'Saldo: ${cuentaPorCobrarState.cuentaPorCobrarForm.ccSaldo}',
@@ -325,8 +340,6 @@ class _CuentaPorCobrarFormState extends ConsumerState<_CuentaPorCobrarForm> {
             ),
             CustomInputField(
               label: 'Detalle',
-
-              keyboardType: TextInputType.number,
               initialValue: cuentaPorCobrarState.pagoForm.ccDetalle.toString(),
               onChanged: (p0) {
                 updateForm(pagoFormCopyWith(ccDetalle: p0));

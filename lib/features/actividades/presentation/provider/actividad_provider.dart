@@ -129,7 +129,6 @@ class ActividadFormNotifier extends StateNotifier<ActividadFormState> {
               actaFotos: resDocumentos.resultado,
               actaEntDoc: usuario.codigo,
               actaEntNombre: usuario.nombre,
-              
             )
             .toJson(),
         "rucempresa": usuario.rucempresa,
@@ -141,7 +140,7 @@ class ActividadFormNotifier extends StateNotifier<ActividadFormState> {
         // actaFotos: resDocumentos,
         // nombres_tecnicos: tecnicos.join(", "),
       };
- 
+
       createUpdateActividad(actividadMap, state.actividadForm.actaId != 0);
       // Actualizar el estado para indicar que ya no se está posteando
       state = state.copyWith(

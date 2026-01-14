@@ -34,7 +34,7 @@ class CuentaPorCobrar extends ConsumerWidget {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(ccId == 0 ? 'Nueva Caja' : 'Editar Cuenta por Cobrar'),
+          title: Text(ccId == 0 ? 'Nueva Caja' : 'Editar CxC'),
         ),
         body: cuentaPorCobrarState.isLoading
             ? const FullScreenLoader()
