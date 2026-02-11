@@ -68,6 +68,16 @@ class ActividadCard extends ConsumerWidget {
               icon: Icons.change_circle,
               label: 'Cambiar Estado',
             ),
+            SlidableAction(
+              onPressed: (context) async {
+                context.push(
+                    '/conexiones?ciudad=${actividad.actaCiudad}&search=${actividad.actaRedWifi}');
+              },
+              backgroundColor: colors.secondary.contrastText,
+              foregroundColor: colors.secondary,
+              icon: Icons.wifi,
+              label: 'PPPoE',
+            ),
           ],
         ),
         child: GestureDetector(

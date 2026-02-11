@@ -25,27 +25,28 @@ class SharedDataNotifier extends StateNotifier<SharedDataState> {
             responseGetVendedores:
                 ResponseGetVendedores(resultado: [], error: ''),
             responseGetPlanes: ResponseGetPlanes(resultado: [], error: ''),
-            responseGetServicios: ResponseGetServicios(resultado: [], error: ''),
+            responseGetServicios:
+                ResponseGetServicios(resultado: [], error: ''),
           ),
         ) {
     // loadNextPage();
   }
 
-  Future<void> loadCiudades() async {
+  Future<ResponseGetCiudades> loadCiudades() async {
     // if (!isAdmin && state.page == 1) {
 
     final ciudadesRes = await sharedRepository.getCiudades();
 
     if (ciudadesRes.error.isNotEmpty) {
-      state = state.copyWith(
-          responseGetCiudades:
-              ResponseGetCiudades(resultado: [], error: ciudadesRes.error));
-      return;
+      final resultError =
+          ResponseGetCiudades(resultado: [], error: ciudadesRes.error);
+      state = state.copyWith(responseGetCiudades: resultError);
+      return resultError;
     }
-
-    state = state.copyWith(
-        responseGetCiudades:
-            ResponseGetCiudades(resultado: ciudadesRes.resultado, error: ''));
+    final result =
+        ResponseGetCiudades(resultado: ciudadesRes.resultado, error: '');
+    state = state.copyWith(responseGetCiudades: result);
+    return result;
   }
 
   Future<void> loadVendedores() async {

@@ -20,6 +20,12 @@ class SharedRepository {
       final List<Ciudad> resCiudades =
           response.data['data'].map<Ciudad>((e) => Ciudad.fromJson(e)).toList();
 
+      if (resCiudades.isEmpty) {
+        return ResponseGetCiudades(
+          resultado: [],
+          error: 'No se encontraron ciudades disponibles.',
+        );
+      }
       return ResponseGetCiudades(
         resultado: resCiudades,
         error: '',

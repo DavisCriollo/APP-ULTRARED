@@ -30,4 +30,11 @@ const appMenuItems = <MenuItem>[
     icon: 'assets/images/open-book.png',
     color: Colors.blue,
   ),
+  MenuItem(
+    title: 'Conexiónes PPPoE',
+    subTitle: "",
+    link: "/conexiones",
+    icon: 'assets/images/open-book.png',
+    color: Colors.blue,
+  ),
 ];

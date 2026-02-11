@@ -8,6 +8,8 @@ import 'package:ultrared/features/auth/presentation/providers/auth_provider.dart
 import 'package:ultrared/features/cuentas_por_cobrar/presentation/screens/cuenta_por_cobrar.dart';
 import 'package:ultrared/features/cuentas_por_cobrar/presentation/screens/cuentas_por_cobrar.dart';
 import 'package:ultrared/features/cuentas_por_cobrar/presentation/screens/pago_screen.dart';
+import 'package:ultrared/features/pppoe/presentation/screens/conexion.dart';
+import 'package:ultrared/features/pppoe/presentation/screens/conexiones.dart';
 import 'package:ultrared/features/shared/screen/show_pdf_screen.dart';
 
 import 'package:ultrared/features/home/home.dart';
@@ -48,7 +50,19 @@ final goRouterProvider = Provider((ref) {
         path: '/actividad/:id',
         builder: (context, state) => const ActividadScreen(),
       ),
-//* CUENTAS POR COBRAR
+      //* PPPoE
+      GoRoute(
+        path: '/conexiones',
+        builder: (context, state) => ConexionesScreen(
+          ciudad: state.queryParams['ciudad'] ?? '',
+          search: state.queryParams['search'] ?? '',
+        ),
+      ),
+      GoRoute(
+        path: '/conexion/:id',
+        builder: (context, state) => const ConexionScreen(),
+      ),
+      //* CUENTAS POR COBRAR
       GoRoute(
         path: '/cuenta_cobrar',
         builder: (context, state) => CuentasPorCobrarScreen(
