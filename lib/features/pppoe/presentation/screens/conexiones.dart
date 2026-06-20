@@ -1,7 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart'; 
 import 'package:ultrared/features/pppoe/domain/entities/actividad.dart';
 import 'package:ultrared/features/pppoe/infrastructure/delegatesFunction/delegates.dart';
 import 'package:ultrared/features/pppoe/presentation/provider/conexion_provider.dart';
@@ -375,8 +374,8 @@ class ConexionesViewState extends ConsumerState<ConexionesScreen> {
                 onPressed: isLoadingConexion
                     ? null
                     : () async {
-                        loadConexion(Conexion.defaultConexion());
-                        context.push('/conexion/0');
+                        // loadConexion(Conexion.defaultConexion());
+                        // context.push('/conexion/0');
                       },
                 child: isLoadingConexion
                     ? SpinPerfect(

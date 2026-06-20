@@ -128,20 +128,12 @@ class ConexionesNotifier extends StateNotifier<ConexionesState> {
     final searchLower = search.toLowerCase();
 
     return (conexiones ?? state.conexiones).where((conexion) {
-      // Validar si está ACTIVO o INACTIVO
-      final isActivo =
-          conexion.disabled.isEmpty || conexion.disabled == 'false';
-
       if (state.estado == ConexionEstado.activos) {
-        // Búsqueda para ACTIVOS: name, service, address, id
-        if (!isActivo) return false;
         return conexion.name.toLowerCase().contains(searchLower) ||
             conexion.service.toLowerCase().contains(searchLower) ||
             conexion.address.toLowerCase().contains(searchLower) ||
             (conexion.id?.toLowerCase().contains(searchLower) ?? false);
       } else {
-        // Búsqueda para INACTIVOS: name, service, profile, id
-        if (isActivo) return false;
         return conexion.name.toLowerCase().contains(searchLower) ||
             conexion.service.toLowerCase().contains(searchLower) ||
             conexion.profile.toLowerCase().contains(searchLower) ||
@@ -257,7 +249,8 @@ class ConexionesNotifier extends StateNotifier<ConexionesState> {
       input: input,
       orden: orden,
       busquedaConexion: busquedaConexion,
-      isSearching: (search).trim().isNotEmpty || (busquedaConexion).isSearching(),
+      isSearching:
+          (search).trim().isNotEmpty || (busquedaConexion).isSearching(),
     );
   }
 

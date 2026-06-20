@@ -181,7 +181,7 @@ class _LoginForm extends ConsumerWidget {
           ),
  
           Text(
-            'Ver: 0.6.0',
+            'Ver: 0.7.0',
             style: TextStyle(
               fontWeight: FontWeight.bold,
             ),
