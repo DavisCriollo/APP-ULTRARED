@@ -96,6 +96,7 @@ class ActividadesNotifier extends StateNotifier<ActividadesState> {
       orden: state.orden,
       busquedaActividades: state.busquedaActividad,
     );
+    if (!mounted) return;
 
     if (actividades.error.isNotEmpty) {
       state = state.copyWith(isLoading: false, error: actividades.error);
@@ -126,6 +127,7 @@ class ActividadesNotifier extends StateNotifier<ActividadesState> {
       busquedaActividades: state.busquedaActividad,
     );
     // ref.read(searchQueryProvider.notifier).update((state) => search);
+    if (!mounted) return [];
     if (actividades.error.isNotEmpty) {
       state = state.copyWith(error: actividades.error, isLoading: false);
       return [];
@@ -154,6 +156,7 @@ class ActividadesNotifier extends StateNotifier<ActividadesState> {
       busquedaActividades: state.busquedaActividad,
     );
     // ref.read(searchQueryProvider.notifier).update((state) => search);
+    if (!mounted) return [];
     if (actividades.error.isNotEmpty) {
       state = state.copyWith(error: actividades.error, search: search);
       return [];
@@ -213,6 +216,7 @@ class ActividadesNotifier extends StateNotifier<ActividadesState> {
       orden: orden ?? state.orden,
       busquedaActividades: busquedaActividad ?? state.busquedaActividad,
     );
+    if (!mounted) return;
 
     if (actividades.error.isNotEmpty) {
       state = state.copyWith(isLoading: false, error: actividades.error);

@@ -6,10 +6,14 @@ import 'package:ultrared/features/shared/infrastructure/services/key_value_stora
 final themeNotifierProvider =
     StateNotifierProvider<ThemeNotifier, AppTheme>((ref) {
   final user = ref.watch(authProvider).user;
-  final colorPrimario =
-      user?.colorSecundario ?? '#6200EE'; // Flutter Primary (Material 3)
-  final colorSecundario =
-      user?.colorPrimario ?? '#03DAC6'; // Flutter Secondary (Material 3)
+  final empresaPrimario = user?.colorSecundario;
+  final empresaSecundario = user?.colorPrimario;
+  final colorPrimario = (empresaPrimario == null || empresaPrimario.isEmpty)
+      ? AppTheme.baseColorPrimario // Color base si no llega del login
+      : empresaPrimario;
+  final colorSecundario = (empresaSecundario == null || empresaSecundario.isEmpty)
+      ? AppTheme.baseColorSecundario // Color base si no llega del login
+      : empresaSecundario;
   const isDarkMode = false;
   final KeyValueStorageImpl storage = KeyValueStorageImpl();
   return ThemeNotifier(

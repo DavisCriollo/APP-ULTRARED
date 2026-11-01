@@ -100,6 +100,7 @@ class CuentaPorCobrarFormNotifier
       return;
     }
     final res = await getCuentaPorCobrarById(state.ccIdParam);
+    if (!mounted) return;
     if (res.error.isNotEmpty) {
       state = state.copyWith(
         isLoading: true,

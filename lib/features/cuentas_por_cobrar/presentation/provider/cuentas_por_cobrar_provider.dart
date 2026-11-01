@@ -84,6 +84,7 @@ class CuentasPorCobrarNotifier extends StateNotifier<CuentasPorCobrarState> {
 
   void _setBancos() async {
     final res = await cuentasPorCobrarRepository.getBancos();
+    if (!mounted) return;
     if (res.error.isNotEmpty) {
       state = state.copyWith(error: res.error);
       return;
@@ -111,6 +112,7 @@ class CuentasPorCobrarNotifier extends StateNotifier<CuentasPorCobrarState> {
       orden: state.orden,
       busquedaCuentasPorCobrar: state.busquedaCuentaPorCobrar,
     );
+    if (!mounted) return;
 
     if (cuentasPorCobrar.error.isNotEmpty) {
       state = state.copyWith(isLoading: false, error: cuentasPorCobrar.error);
@@ -146,6 +148,7 @@ class CuentasPorCobrarNotifier extends StateNotifier<CuentasPorCobrarState> {
       busquedaCuentasPorCobrar: state.busquedaCuentaPorCobrar,
     );
     // ref.read(searchQueryProvider.notifier).update((state) => search);
+    if (!mounted) return [];
     if (cuentasPorCobrar.error.isNotEmpty) {
       state = state.copyWith(error: cuentasPorCobrar.error, isLoading: false);
       return [];
@@ -176,6 +179,7 @@ class CuentasPorCobrarNotifier extends StateNotifier<CuentasPorCobrarState> {
       busquedaCuentasPorCobrar: state.busquedaCuentaPorCobrar,
     );
     // ref.read(searchQueryProvider.notifier).update((state) => search);
+    if (!mounted) return [];
     if (cuentasPorCobrar.error.isNotEmpty) {
       state = state.copyWith(error: cuentasPorCobrar.error, search: search);
       return [];
@@ -244,6 +248,7 @@ class CuentasPorCobrarNotifier extends StateNotifier<CuentasPorCobrarState> {
       busquedaCuentasPorCobrar:
           busquedaCuentaPorCobrar ?? state.busquedaCuentaPorCobrar,
     );
+    if (!mounted) return;
 
     if (cuentasPorCobrar.error.isNotEmpty) {
       state = state.copyWith(isLoading: false, error: cuentasPorCobrar.error);

@@ -168,6 +168,7 @@ class ConexionesNotifier extends StateNotifier<ConexionesState> {
       name: name,
       action: newStatus,
     );
+    if (!mounted) return false;
     if (!response.status) {
       state = state.copyWith(error: response.error);
       return false;
@@ -204,6 +205,7 @@ class ConexionesNotifier extends StateNotifier<ConexionesState> {
     String primeraCiudad = '';
     if (responseGetCiudades.resultado.isEmpty) {
       final response = await loadCiudades();
+      if (!mounted) return;
       if (response.error.isNotEmpty) {
         state = state.copyWith(isLoading: false, error: response.error);
         return;
@@ -232,6 +234,7 @@ class ConexionesNotifier extends StateNotifier<ConexionesState> {
       // orden: orden ?? state.orden,
       busquedaConexiones: busquedaConexion,
     );
+    if (!mounted) return;
     if (conexionesRes.error.isNotEmpty) {
       state = state.copyWith(isLoading: false, error: conexionesRes.error);
       return;

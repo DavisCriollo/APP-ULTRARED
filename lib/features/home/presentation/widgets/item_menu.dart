@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ultrared/config/menu/menu_item.dart';
 import 'package:ultrared/features/shared/utils/responsive.dart';
-import 'package:ultrared/main.dart';
 
 class ItemMenu extends StatelessWidget {
   final MenuItem menuItem;
@@ -17,76 +16,58 @@ class ItemMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final radius = size.w(16);
+
     return SizedBox(
-      width: size.iScreen(14.0), // Ajustar el ancho de los elementos
-      height: size.iScreen(14.0), // Ajustar el ancho de los elementos
+      width: size.iScreen(14.0),
+      height: size.iScreen(14.0),
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-            vertical: 4.0), // Espacio entre los elementos
-        child: ClipRRect(
-          borderRadius:
-              BorderRadius.circular(10.0), // Reducir el radio de los bordes
-          child: Material(
-            color: Colors.transparent, // Color de fondo transparente
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(
-                  10.0), // Radio de los bordes redondeados
-            ),
-            child: InkWell(
-              onTap: () {
-                // Acción al presionar el botón
-                context.push(menuItem.link);
-              },
-              splashColor: colors.secondary
-                  .withAlpha((0.7 * 255).toInt()), // Color del splash
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.0),
-                  border: Border.all(
-                      color: colors.secondary.lighten(0.2),
-                      // color: turnoActivo
-                      //     ? colors.secondary.lighten(0.2)
-                      //     : colors.secondary
-                      //         .lighten(0.2)
-                      //         .withAlpha((0.6 * 255).toInt()),
-                      width: 2.0), // Borde gris
+        padding: EdgeInsets.symmetric(vertical: size.h(4)),
+        child: Material(
+          color: Colors.white,
+          elevation: 0,
+          borderRadius: BorderRadius.circular(radius),
+          child: InkWell(
+            onTap: () {
+              context.push(menuItem.link);
+            },
+            borderRadius: BorderRadius.circular(radius),
+            splashColor: colors.primary.withValues(alpha: 0.08),
+            highlightColor: colors.primary.withValues(alpha: 0.04),
+            child: Ink(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(radius),
+                color: Colors.white,
+                border: Border.all(
+                  color: colors.primary,
+                  width: 1.2,
                 ),
-                child: Center(
-                  // Centrar el contenido
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        menuItem.icon,
-                        height: size.iScreen(7.0),
-                        color: colors.secondary.lighten(0.2),
-                        // color: turnoActivo
-                        //     ? colors.secondary.lighten(0.2)
-                        //     : colors.secondary.lighten(0.2).withAlpha(
-                        //         (0.6 * 255)
-                        //             .toInt()), // Reducir el tamaño de la imagen
-                      ),
-                      const SizedBox(height: 4), // Reducir el espacio
-                      Text(
-                        menuItem.title,
-                        style: TextStyle(
-                          fontSize:
-                              size.iScreen(1.8), // Reducir el tamaño del texto
-                          fontWeight: FontWeight.bold,
-                          color: colors.secondary.lighten(0.2),
-                          // color: turnoActivo
-                          //     ? colors.secondary.lighten(0.2)
-                          //     : colors.secondary
-                          //         .lighten(0.2)
-                          //         .withAlpha((0.6 * 255).toInt()),
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 2), // Reducir el espacio
-                    ],
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    menuItem.icon,
+                    height: size.iScreen(5),
+                    color: colors.primary,
                   ),
-                ),
+                  SizedBox(height: size.h(8)),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: size.w(6)),
+                    child: Text(
+                      menuItem.title,
+                      style: TextStyle(
+                        fontSize: size.iScreen(1.6),
+                        fontWeight: FontWeight.w600,
+                        color: colors.onSurface,
+                        height: 1.1,
+                      ),
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

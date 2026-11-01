@@ -37,8 +37,9 @@ class ActividadCard extends ConsumerWidget {
       size: size,
       child: Slidable(
         key: ValueKey(actividad.actaId),
-        endActionPane: ActionPane(
+        startActionPane: ActionPane(
           motion: const DrawerMotion(),
+          extentRatio: 0.48,
           children: [
             SlidableAction(
               backgroundColor: colors.primary.contrastText,
@@ -68,6 +69,12 @@ class ActividadCard extends ConsumerWidget {
               icon: Icons.change_circle,
               label: 'Cambiar Estado',
             ),
+          ],
+        ),
+        endActionPane: ActionPane(
+          motion: const DrawerMotion(),
+          extentRatio: 0.32,
+          children: [
             SlidableAction(
               onPressed: (context) async {
                 context.push(

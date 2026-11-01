@@ -32,8 +32,16 @@ void main() async {
         overrides: [
           themeNotifierProvider.overrideWith((ref) {
             final user = ref.watch(authProvider).user;
-            final colorPrimario = user?.colorSecundario ?? '#6200EE';
-            final colorSecundario = user?.colorPrimario ?? '#03DAC6';
+            final empresaPrimario = user?.colorSecundario;
+            final empresaSecundario = user?.colorPrimario;
+            final colorPrimario =
+                (empresaPrimario == null || empresaPrimario.isEmpty)
+                    ? AppTheme.baseColorPrimario
+                    : empresaPrimario;
+            final colorSecundario =
+                (empresaSecundario == null || empresaSecundario.isEmpty)
+                    ? AppTheme.baseColorSecundario
+                    : empresaSecundario;
 
             return ThemeNotifier(
               colorPrimario: colorPrimario,

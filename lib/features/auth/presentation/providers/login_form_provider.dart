@@ -27,10 +27,12 @@ class LoginFormNotifier extends StateNotifier<LoginFormState> {
 
   void setvalues() async {
     final rememberMe = await keyValueStorage.getValue<int>('rememberMe');
+    if (!mounted) return;
     state = state.copyWith(isLoadingData: true);
     final usuario = await keyValueStorage.getValue<String>('usuario');
     final password = await keyValueStorage.getValue<String>('password');
     final empresa = await keyValueStorage.getValue<String>('empresa');
+    if (!mounted) return;
 
     if (rememberMe == 1) {
       state = state.copyWith(
@@ -40,6 +42,7 @@ class LoginFormNotifier extends StateNotifier<LoginFormState> {
         rememberMe: rememberMe == 1,
       );
       await Future.delayed(const Duration(milliseconds: 100));
+      if (!mounted) return;
     }
     state = state.copyWith(isLoadingData: false);
   }
@@ -105,10 +108,11 @@ class LoginFormNotifier extends StateNotifier<LoginFormState> {
         'rememberMe',
       );
     }
-    if (!state.isValid) return;
+    if (!mounted || !state.isValid) return;
     state = state.copyWith(isPosting: true);
     await loginUserCallback(
         state.empresa.value, state.usuario.value, state.password.value);
+    if (!mounted) return;
     state = state.copyWith(isPosting: false);
   }
 

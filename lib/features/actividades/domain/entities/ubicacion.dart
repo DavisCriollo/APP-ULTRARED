@@ -26,6 +26,22 @@ class Ubicacion {
         "latitud": latitud,
       };
 
+  bool get tieneCoordenadas => latitud != 0 || longitud != 0;
+
+  /// Última ubicación que el teléfono ya tenía. Responde al instante.
+  static Future<Ubicacion?> obtenerUltimaConocida() async {
+    try {
+      final posicion = await Geolocator.getLastKnownPosition();
+      if (posicion == null) return null;
+      return Ubicacion(
+        longitud: posicion.longitude,
+        latitud: posicion.latitude,
+      );
+    } catch (_) {
+      return null;
+    }
+  }
+
   /// 📍 Obtiene la ubicación actual del dispositivo
   static Future<Ubicacion> obtenerActual() async {
     try {
@@ -52,7 +68,8 @@ class Ubicacion {
       // );
 
       Position posicion = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
+        desiredAccuracy: LocationAccuracy.medium,
+        timeLimit: const Duration(seconds: 8),
       );
 
       return Ubicacion(

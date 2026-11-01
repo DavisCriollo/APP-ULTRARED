@@ -36,6 +36,9 @@ class SharedDataNotifier extends StateNotifier<SharedDataState> {
     // if (!isAdmin && state.page == 1) {
 
     final ciudadesRes = await sharedRepository.getCiudades();
+    if (!mounted) {
+      return ResponseGetCiudades(resultado: [], error: '');
+    }
 
     if (ciudadesRes.error.isNotEmpty) {
       final resultError =
@@ -53,6 +56,7 @@ class SharedDataNotifier extends StateNotifier<SharedDataState> {
     // if (!isAdmin && state.page == 1) {
 
     final vendedoresRes = await sharedRepository.getVendedores();
+    if (!mounted) return;
 
     if (vendedoresRes.error.isNotEmpty) {
       state = state.copyWith(
@@ -71,6 +75,7 @@ class SharedDataNotifier extends StateNotifier<SharedDataState> {
     // if (!isAdmin && state.page == 1) {
 
     final vendedoresRes = await sharedRepository.getPlanes(tipoPlan: tipoPlan);
+    if (!mounted) return;
 
     if (vendedoresRes.error.isNotEmpty) {
       state = state.copyWith(
@@ -89,6 +94,7 @@ class SharedDataNotifier extends StateNotifier<SharedDataState> {
     // if (!isAdmin && state.page == 1) {
 
     final serviciosRes = await sharedRepository.getServicios();
+    if (!mounted) return;
 
     if (serviciosRes.error.isNotEmpty) {
       state = state.copyWith(

@@ -46,24 +46,44 @@ class ActividadFormNotifier extends StateNotifier<ActividadFormState> {
           actividadActive: Actividad.defaultActividad(),
           validacionActividad: ValidacionActividad(),
           formStatus: Formstatus(),
+          isLoading: false,
           // ccIdParam: ccIdParam,
 
           // placasData: [actividad.venOtrosDetalles],
-        )) {
-    getUbicacion();
-  }
+        ));
 
+  /// Pide la ubicación sin bloquear la lista ni el formulario.
+  /// Primero usa la última conocida y después la refresca.
   void getUbicacion() async {
+    final ultima = await Ubicacion.obtenerUltimaConocida();
+    if (!mounted) return;
+    if (ultima != null) {
+      _guardarUbicacion(ultima);
+    }
+
+    final actual = await Ubicacion.obtenerActual();
+    if (!mounted) return;
+    _guardarUbicacion(actual);
+  }
+
+  void _guardarUbicacion(Ubicacion ubicacion) {
+    if (!ubicacion.tieneCoordenadas) return;
+    final form = state.actividadForm;
+    final anterior = state.ubicacionObtenida;
+    final sigueSiendoAutomatica = form.actaId == 0 &&
+        (!form.actaUbicacion.tieneCoordenadas ||
+            (anterior != null &&
+                form.actaUbicacion.latitud == anterior.latitud &&
+                form.actaUbicacion.longitud == anterior.longitud));
     state = state.copyWith(
-      isLoading: true,
-    );
-    state = state.copyWith(ubicacionObtenida: await Ubicacion.obtenerActual());
-    state = state.copyWith(
-      isLoading: false,
+      ubicacionObtenida: ubicacion,
+      actividadForm: sigueSiendoAutomatica
+          ? form.copyWith(actaUbicacion: ubicacion)
+          : form,
     );
   }
 
-  void loadActividad(Actividad actividadToActive) async {
+  void loadActividad(Actividad actividadToActive) {
     state = state.copyWith(
       isLoading: false,
       actividadForm: actividadToActive.actaId == 0
@@ -71,6 +91,9 @@ class ActividadFormNotifier extends StateNotifier<ActividadFormState> {
           : actividadToActive,
       actividadActive: actividadToActive,
     );
+    if (actividadToActive.actaId == 0) {
+      getUbicacion();
+    }
   }
 
   void defaultActividad() {
@@ -115,6 +138,7 @@ class ActividadFormNotifier extends StateNotifier<ActividadFormState> {
           imagenes: state.actividadForm.actaFotos,
           tipo: 'documento',
           urlToDelete: state.imagenestoDelete);
+      if (!mounted) return false;
       if (resDocumentos.error.isNotEmpty) {
         state = state.copyWith(
           error: resDocumentos.error,
@@ -150,6 +174,7 @@ class ActividadFormNotifier extends StateNotifier<ActividadFormState> {
       );
       return true;
     } catch (e) {
+      if (!mounted) return false;
       // Actualizar el estado para indicar que ya no se está posteando
       state = state.copyWith(
         formStatus: state.formStatus.copyWith(

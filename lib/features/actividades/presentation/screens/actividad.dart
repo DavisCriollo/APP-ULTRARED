@@ -589,7 +589,6 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
               controller: ppoeController,
               label: 'PPPoE',
               onChanged: (p0) {
-                ppoeController.text = p0;
                 updateForm(
                     actividadForm: actividadFormCopyWith(actaRedWifi: p0));
               },
@@ -600,7 +599,6 @@ class _ActividadFormState extends ConsumerState<_ActividadForm> {
               controller: claveController,
               label: 'Clave',
               onChanged: (p0) {
-                claveController.text = p0;
                 updateForm(actividadForm: actividadFormCopyWith(actaClave: p0));
               },
               // errorMessage:

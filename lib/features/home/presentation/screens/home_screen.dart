@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:ultrared/config/menu/menu_item.dart';
+import 'package:ultrared/config/provider/app_version_provider.dart';
 import 'package:ultrared/features/auth/presentation/providers/auth_provider.dart';
 import 'package:ultrared/features/home/presentation/widgets/item_menu.dart';
 import 'package:ultrared/features/shared/provider/notification.dart';
@@ -36,10 +37,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Scaffold(
       drawer: SideMenu(scaffoldKey: scaffoldKey),
       appBar: CustomAppBar(
-        title: 'Home',
         userName: authState.user!.nombre,
-        moduleName: 'Home',
-        logoUrl: authState.user!.logo,
       ),
       body: _HomeView(),
     );
@@ -53,12 +51,30 @@ class _HomeView extends ConsumerWidget {
     final authN = ref.watch(authProvider.notifier);
 
     final size = Responsive.of(context);
+    final colors = Theme.of(context).colorScheme;
     return SizedBox(
       width: size.wScreen(100),
       height: size.hScreen(100),
       // color: Colors.red,
       child: Stack(
         children: [
+          Positioned(
+            top: size.h(50),
+            left: size.w(32),
+            right: size.w(32),
+            child: Image.network(
+              authState.user!.logo,
+              height: size.h(72),
+              fit: BoxFit.contain,
+              errorBuilder: (context, error, stackTrace) {
+                return Image.asset(
+                  'assets/images/no-image.jpg',
+                  height: size.h(72),
+                  fit: BoxFit.contain,
+                );
+              },
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.all(4.0), // Reducir el padding
             child: Center(
@@ -132,27 +148,36 @@ class _HomeView extends ConsumerWidget {
             ),
           ),
           Positioned(
-              bottom: 0,
+              left: 0,
               right: 0,
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                    horizontal: size.iScreen(1.0), vertical: size.iScreen(1.0)),
-                width: size.wScreen(100),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Ver: 0.7.0',
-                      style: TextStyle(
-                        fontSize: size.iScreen(1.7),
-                        fontWeight: FontWeight.bold,
+              bottom: 0,
+              child: SafeArea(
+                top: false,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: size.w(16),
+                    vertical: size.h(8),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      AppVersionText(
+                        prefix: 'Ver: ',
+                        style: TextStyle(
+                          fontSize: size.iScreen(1.6),
+                          fontWeight: FontWeight.w600,
+                          color: colors.onSurface.withValues(alpha: 0.75),
+                          height: 1,
+                        ),
                       ),
-                    ),
-                    Image.asset(
-                      'assets/images/logoNeitor.png',
-                      height: size.iScreen(6.0),
-                    )
-                  ],
+                      Image.asset(
+                        'assets/images/logoNeitor.png',
+                        height: size.iScreen(4.2),
+                        fit: BoxFit.contain,
+                      ),
+                    ],
+                  ),
                 ),
               )),
         ],
