@@ -8,6 +8,8 @@ class CameraGalleryServiceImpl extends CameraGalleryService {
     final XFile? photo = await _picker.pickImage(
         source: ImageSource.gallery,
         imageQuality: 80,
+        maxWidth: 1600,
+        maxHeight: 1600,
         preferredCameraDevice: CameraDevice.rear);
     if (photo == null) return null;
 
@@ -15,7 +17,11 @@ class CameraGalleryServiceImpl extends CameraGalleryService {
   }
 
   Future<List<String>> selectPhotos() async {
-    final List<XFile> photos = await _picker.pickMultiImage(imageQuality: 80);
+    final List<XFile> photos = await _picker.pickMultiImage(
+      imageQuality: 80,
+      maxWidth: 1600,
+      maxHeight: 1600,
+    );
     if (photos.isEmpty) return [];
     return photos.map((p) => p.path).toList();
   }
@@ -25,6 +31,8 @@ class CameraGalleryServiceImpl extends CameraGalleryService {
     final XFile? photo = await _picker.pickImage(
         source: ImageSource.camera,
         imageQuality: 80,
+        maxWidth: 1600,
+        maxHeight: 1600,
         preferredCameraDevice: CameraDevice.rear);
     if (photo == null) return null;
 

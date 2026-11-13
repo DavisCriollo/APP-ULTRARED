@@ -92,18 +92,6 @@ class ConexionCard extends ConsumerWidget {
           ],
         ),
         child: GestureDetector(
-          onLongPress: () async {
-            final url = Uri.parse("http://" + conexion.address);
-            try {
-              await launchUrl(url);
-            } catch (e) {
-              NotificationsService.show(
-                context,
-                'No se pudo abrir la URL',
-                SnackbarCategory.error,
-              );
-            }
-          },
           onTap: redirect
               ? () {
                   if (estado == ConexionEstado.secret) {
@@ -125,8 +113,7 @@ class ConexionCard extends ConsumerWidget {
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Id
-                      Text(
+                      SelectableText(
                         conexion.name,
                         style: TextStyle(
                           fontSize: size.iScreen(1.5),
@@ -167,13 +154,16 @@ class ConexionCard extends ConsumerWidget {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            // Dirección IP
-                            Text(
-                              'IP: ${conexion.address}',
-                              style: TextStyle(
-                                fontSize: size.iScreen(1.4),
-                                color: Colors.blue,
-                                decoration: TextDecoration.underline,
+                            GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () => _abrirIp(context, conexion.address),
+                              child: Text(
+                                'IP: ${conexion.address}',
+                                style: TextStyle(
+                                  fontSize: size.iScreen(1.4),
+                                  color: Colors.blue,
+                                  decoration: TextDecoration.underline,
+                                ),
                               ),
                             ),
 
@@ -256,6 +246,20 @@ class ConexionCard extends ConsumerWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+Future<void> _abrirIp(BuildContext context, String address) async {
+  final url = Uri.parse('http://$address');
+  try {
+    await launchUrl(url);
+  } catch (e) {
+    if (!context.mounted) return;
+    NotificationsService.show(
+      context,
+      'No se pudo abrir la URL',
+      SnackbarCategory.error,
     );
   }
 }

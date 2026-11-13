@@ -94,25 +94,43 @@ class _UploadInputState extends ConsumerState<UploadInput> {
         }
       }
 
+      const int maxBytes = 4 * 1024 * 1024;
+      if (await fileToUpload.length() > maxBytes) {
+        NotificationsService.show(
+          context.mounted ? context : null,
+          'El archivo supera el tamaño máximo permitido de 4 MB',
+          SnackbarCategory.error,
+        );
+        widget.setLoading(false);
+        return;
+      }
+
+      if (widget.value.trim().isNotEmpty) {
+        try {
+          await dio.delete(
+            "/storage/delete",
+            data: {
+              "urls": [widget.value.trim()]
+            },
+          );
+        } catch (_) {}
+      }
+
       final formData = FormData.fromMap({
-        "tipo": widget.label,
+        "carpeta": widget.label,
         "archivo":
             await MultipartFile.fromFile(fileToUpload.path, filename: fileName),
       });
 
-      // Si hay un archivo previo, eliminarlo
-      if (widget.value.isNotEmpty) {
-        await dio.post("/upload_delete_multiple_files/delete", data: {
-          "urls": [widget.value]
-        });
-      }
-
       final response = await dio.post(
-        "/upload_delete_multiple_files/upload",
+        "/storage/upload",
         data: formData,
       );
 
-      widget.onChanged(response.data["nombre"]);
+      final String uploadedUrl =
+          (response.data?["url"] ?? response.data?["nombre"] ?? "").toString();
+
+      widget.onChanged(uploadedUrl);
     } catch (e) {
       NotificationsService.show(context.mounted ? context : null,
           'Hubo un error al subir el archivo', SnackbarCategory.error);
@@ -125,9 +143,9 @@ class _UploadInputState extends ConsumerState<UploadInput> {
 
     widget.setLoading(true);
     try {
-      if (widget.value.isNotEmpty) {
-        await dio.post("/upload_delete_multiple_files/delete", data: {
-          "urls": [widget.value]
+      if (widget.value.trim().isNotEmpty) {
+        await dio.delete("/storage/delete", data: {
+          "urls": [widget.value.trim()]
         });
         widget.onChanged('');
         setState(() => _selectedFile = null);

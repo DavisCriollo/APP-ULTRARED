@@ -50,20 +50,20 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCfzjHadRaFd_FWN_xHGYmgkxsKqPDXdkg',
-    appId: '1:908874057989:android:0deae4a07593733fef0f6c',
-    messagingSenderId: '908874057989',
-    projectId: 'flutter-proyect-da4da',
-    storageBucket: 'flutter-proyect-da4da.firebasestorage.app',
+    apiKey: 'AIzaSyDlEBQ3ku8WNw4WYiY9jpGFJJcic-k5xgo',
+    appId: '1:690380702681:android:06516d8b77f55a1856cfc8',
+    messagingSenderId: '690380702681',
+    projectId: 'ultrared-39dcf',
+    storageBucket: 'ultrared-39dcf.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDfIMDvKx_AVtOo2geOZwr7Z2VdF50X8',
-    appId: '1:908874057989:ios:b308bd21ce1b073def0f6c',
-    messagingSenderId: '908874057989',
-    projectId: 'flutter-proyect-da4da',
-    storageBucket: 'flutter-proyect-da4da.firebasestorage.app',
-    iosBundleId: 'com.example.ultrared',
+    apiKey: 'AIzaSyDgYrYeLuquJuV0QcVm2HhslyGo3uJ6Nm8',
+    appId: '1:690380702681:ios:5d5fa15b8464425456cfc8',
+    messagingSenderId: '690380702681',
+    projectId: 'ultrared-39dcf',
+    storageBucket: 'ultrared-39dcf.firebasestorage.app',
+    iosBundleId: 'com.ultrared.neitor',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(

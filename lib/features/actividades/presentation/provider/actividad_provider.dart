@@ -136,7 +136,7 @@ class ActividadFormNotifier extends StateNotifier<ActividadFormState> {
     try {
       final resDocumentos = await uploadFilesRepository.uploadFiles(
           imagenes: state.actividadForm.actaFotos,
-          tipo: 'documento',
+          tipo: 'acta_entrega_recepcion',
           urlToDelete: state.imagenestoDelete);
       if (!mounted) return false;
       if (resDocumentos.error.isNotEmpty) {

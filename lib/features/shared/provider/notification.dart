@@ -12,7 +12,9 @@ import 'package:ultrared/features/shared/infrastructure/services/key_value_stora
 import 'package:ultrared/firebase_options.dart';
 
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   print('Handling a background message: ${message.messageId}');
 }
 

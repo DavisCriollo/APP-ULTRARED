@@ -1,48 +1,29 @@
-  {
-    "project_info": {
-      "project_number": "908874057989",
-      "project_id": "flutter-proyect-da4da",
-      "storage_bucket": "flutter-proyect-da4da.firebasestorage.app"
-    },
-    "client": [
-      {
-        "client_info": {
-          "mobilesdk_app_id": "1:908874057989:android:383ec7c7c7223fceef0f6c",
-          "android_client_info": {
-            "package_name": "com.ultrared.neitor"
-          }
-        },
-        "oauth_client": [],
-        "api_key": [
-          {
-            "current_key": "AIzaSyCfzjHadRaFd_FWN_xHGYmgkxsKqPDXdkg"
-          }
-        ],
-        "services": {
-          "appinvite_service": {
-            "other_platform_oauth_client": []
-          }
+{
+  "project_info": {
+    "project_number": "690380702681",
+    "project_id": "ultrared-39dcf",
+    "storage_bucket": "ultrared-39dcf.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:690380702681:android:06516d8b77f55a1856cfc8",
+        "android_client_info": {
+          "package_name": "com.ultrared.neitor"
         }
       },
-      {
-        "client_info": {
-          "mobilesdk_app_id": "1:908874057989:android:0deae4a07593733fef0f6c",
-          "android_client_info": {
-            "package_name": "com.ultrared.neitor"
-          }
-        },
-        "oauth_client": [],
-        "api_key": [
-          {
-            "current_key": "AIzaSyCfzjHadRaFd_FWN_xHGYmgkxsKqPDXdkg"
-          }
-        ],
-        "services": {
-          "appinvite_service": {
-            "other_platform_oauth_client": []
-          }
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlEBQ3ku8WNw4WYiY9jpGFJJcic-k5xgo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
         }
       }
-    ],
-    "configuration_version": "1"
-  }
+    }
+  ],
+  "configuration_version": "1"
+}
